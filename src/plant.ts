@@ -4,51 +4,35 @@ export interface Crop {
 }
 
 export class Plant {
-  type: string;
+  species: plantSpecies;
   growthLevel: number;
-  maxGrowthLevel: number;
-  growthStages: string[];
   growthAmount: number;
-  waterRequired: number;
-  sunRequired: number;
-  cropValue: number;
-  icon: string;
-  constructor(
-    type: string,
-    max: number,
-    waterReq: number,
-    sunReq: number,
-    value: number,
-    stages: string[],
-  ) {
-    this.type = type;
+  curIcon: string;
+  constructor(species: plantSpecies) {
+    this.species = species;
     this.growthLevel = 0;
-    this.maxGrowthLevel = max;
-    this.growthStages = stages;
-    this.icon = stages[0];
-    this.waterRequired = waterReq;
-    this.sunRequired = sunReq;
-    this.cropValue = value;
+    this.curIcon = species.growthStages[0];
     this.growthAmount = 0;
   }
 
   grow(currWater: number, currSun: number) {
     if (
-      this.growthLevel < this.maxGrowthLevel &&
-      currWater >= this.waterRequired &&
-      currSun >= this.sunRequired
+      this.growthLevel < this.species.maxGrowthLevel &&
+      currWater >= this.species.waterRequired &&
+      currSun >= this.species.sunRequired
     ) {
       this.growthLevel++;
-      this.growthAmount += this.growthStages.length / (this.maxGrowthLevel + 1);
+      this.growthAmount +=
+        this.species.growthStages.length / (this.species.maxGrowthLevel + 1);
       console.log("growth amount", this.growthAmount);
-      this.icon = this.growthStages[Math.floor(this.growthAmount)];
+      this.curIcon = this.species.growthStages[Math.floor(this.growthAmount)];
     }
   }
 
   harvest(): Crop {
-    if (this.growthLevel == this.maxGrowthLevel) {
+    if (this.growthLevel == this.species.maxGrowthLevel) {
       return {
-        type: this.type,
+        type: this.species.name,
         value: 10,
       };
     }
@@ -60,17 +44,45 @@ export class Plant {
 }
 
 export function makePlant(type: string): Plant | undefined {
-  let plant;
-  switch (type) {
-    case "carrot":
-      plant = new Plant("carrot", 10, 2, 2, 10, [".", "c", "C"]);
-      break;
-    case "tomato":
-      plant = new Plant("tomato", 6, 4, 2, 20, [".", "t", "T"]);
-      break;
-    case "potato":
-      plant = new Plant("potato", 3, 5, 1, 15, [".", "p", "P"]);
-      break;
+  const species = plantSpeciesMap[type];
+  if (species) {
+    return new Plant(species);
   }
-  return plant;
+  return undefined;
 }
+
+interface plantSpecies {
+  name: string;
+  maxGrowthLevel: number;
+  waterRequired: number;
+  sunRequired: number;
+  cropValue: number;
+  growthStages: string[];
+}
+
+const plantSpeciesMap: { [key: string]: plantSpecies } = {
+  carrot: {
+    name: "carrot",
+    maxGrowthLevel: 2,
+    waterRequired: 2,
+    sunRequired: 2,
+    cropValue: 10,
+    growthStages: [".", "c", "C"],
+  },
+  tomato: {
+    name: "tomato",
+    maxGrowthLevel: 4,
+    waterRequired: 2,
+    sunRequired: 2,
+    cropValue: 20,
+    growthStages: [".", "t", "T"],
+  },
+  potato: {
+    name: "potato",
+    maxGrowthLevel: 5,
+    waterRequired: 1,
+    sunRequired: 2,
+    cropValue: 15,
+    growthStages: [".", "p", "P"],
+  },
+};

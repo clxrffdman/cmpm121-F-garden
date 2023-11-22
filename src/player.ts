@@ -2,12 +2,9 @@ import { GameGrid } from "./gameGrid";
 import { gameGrid } from "./main";
 
 export class Player {
-  /*reqs
-
-    - Movement
+  /*TODO:
     - Interaction
     - Inventory (later)
-
     */
   x: number;
   y: number;
@@ -60,30 +57,16 @@ export class Player {
 
   changePlayerOrientation(key: string) {
     this.lastInput = key;
-    switch (key) {
-      case "ArrowUp":
-        this.character = "^";
-        this.highlightedX = this.x;
-        this.highlightedY = this.y - 1;
-        break;
-      case "ArrowDown":
-        this.character = "v";
-        this.highlightedX = this.x;
-        this.highlightedY = this.y + 1;
-        break;
-      case "ArrowLeft":
-        this.character = "<";
-        this.highlightedX = this.x - 1;
-        this.highlightedY = this.y;
-        break;
-      case "ArrowRight":
-        this.character = ">";
-        this.highlightedX = this.x + 1;
-        this.highlightedY = this.y;
-        break;
-      default:
-        return;
-    }
+    const dirData: { [k: string]: [string, [number, number]] } = {
+      //In the format "key: [Character, [x, y]]"
+      ArrowUp: ["^", [0, -1]],
+      ArrowDown: ["v", [0, 1]],
+      ArrowLeft: ["<", [-1, 0]],
+      ArrowRight: [">", [1, 0]],
+    };
+    this.character = dirData[key][0];
+    this.highlightedX = this.x + dirData[key][1][0];
+    this.highlightedY = this.y + dirData[key][1][1];
   }
 
   renderPlayer() {

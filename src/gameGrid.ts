@@ -28,10 +28,16 @@ export class GameGrid {
       console.log("Out of bounds, ", x, y);
       return false;
     }
-    // if (this.grid[y][x].plant != undefined) {
-    //   return false;
-    // }
+    if (this.grid[y][x].plant?.growthLevel != 0) {
+      return false;
+    }
     return true;
+  }
+
+  cellAt(x: number, y: number): plantCell | undefined {
+    if (x < 0 || x >= this.gridSize || y < 0 || y >= this.gridSize)
+      return undefined;
+    return this.grid[y]?.at(x);
   }
 
   update() {
@@ -51,25 +57,17 @@ export class GameGrid {
 
   determineNumNeighbors(i: number, j: number): number {
     let numNeighbors = 0;
-    if (this.grid[i + 1]) {
-      if (this.grid[i + 1][j].plant) {
-        numNeighbors++;
-      }
+    if (this.cellAt(j, i - 1)?.plant) {
+      numNeighbors++;
     }
-    if (this.grid[i][j + 1]) {
-      if (this.grid[i][j + 1].plant) {
-        numNeighbors++;
-      }
+    if (this.cellAt(j + 1, i)?.plant) {
+      numNeighbors++;
     }
-    if (this.grid[i - 1]) {
-      if (this.grid[i - 1][j].plant) {
-        numNeighbors++;
-      }
+    if (this.cellAt(j, i + 1)?.plant) {
+      numNeighbors++;
     }
-    if (this.grid[i][j - 1]) {
-      if (this.grid[i][j - 1].plant) {
-        numNeighbors++;
-      }
+    if (this.cellAt(j - 1, i)?.plant) {
+      numNeighbors++;
     }
     return numNeighbors;
   }
@@ -87,10 +85,12 @@ export class GameGrid {
   updateWaterLevels() {
     for (let i = 0; i < this.gridSize; i++) {
       for (let j = 0; j < this.gridSize; j++) {
-        this.grid[i][j].waterLevel += Math.floor(Math.random() * 5);
-        if (this.grid[i][j].waterLevel > this.maxWaterLevel) {
-          this.grid[i][j].waterLevel = this.maxWaterLevel;
+        let waterLevel = this.grid[i][j].waterLevel;
+        waterLevel += Math.floor(Math.random() * 5);
+        if (waterLevel > this.maxWaterLevel) {
+          waterLevel = this.maxWaterLevel;
         }
+        this.grid[i][j].waterLevel = waterLevel;
       }
     }
   }
@@ -110,23 +110,35 @@ export class GameGrid {
           `background-color: ${color}; width: 30px; height: 30px;`,
         );
 
-        const character = this.grid[i][j].plant?.icon;
+        const character = this.grid[i][j].plant?.curIcon;
         if (character) {
           const characterText = document.createElement("span");
-          characterText.setAttribute("style", "font-size: 14px;");
+          characterText.setAttribute(
+            "style",
+            "font-size: 14px; align-self: center;",
+          );
           characterText.textContent = character;
           cell.appendChild(characterText);
         }
 
         if (this.player.x == j && this.player.y == i) {
           const playerText = document.createElement("span");
-          playerText.setAttribute("style", "font-size: 14px;");
+          playerText.setAttribute(
+            "style",
+            "font-size: 14px; align-self: center;",
+          );
           playerText.textContent = this.player.character;
           cell.appendChild(playerText);
         }
 
         // Add tooltip
-        cell.setAttribute("title", `Water Level: ${waterLevel}`);
+        cell.setAttribute(
+          "title",
+          `Water Level: ${waterLevel}\nNeighbors:${this.determineNumNeighbors(
+            i,
+            j,
+          )}`,
+        );
 
         row.appendChild(cell);
       }
