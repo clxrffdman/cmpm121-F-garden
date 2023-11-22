@@ -24,7 +24,11 @@ export class Plant {
       this.growthLevel++;
       this.growthAmount +=
         this.species.growthStages.length / (this.species.maxGrowthLevel + 1);
-      this.curIcon = this.species.growthStages[Math.floor(this.growthAmount)];
+      if (this.curIcon == "p") {
+        this.curIcon = "P";
+      } else {
+        this.curIcon = this.species.growthStages[Math.floor(this.growthAmount)];
+      }
     }
   }
 
@@ -63,11 +67,11 @@ interface plantSpecies {
 const plantSpeciesMap: { [key: string]: plantSpecies } = {
   carrot: {
     name: "carrot",
-    maxGrowthLevel: 2,
+    maxGrowthLevel: 3,
     waterRequired: 2,
     sunRequired: 2,
     cropValue: 10,
-    growthStages: [".", "c", "C"],
+    growthStages: ["_", ".", "c", "C"],
   },
   tomato: {
     name: "tomato",
@@ -75,7 +79,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     waterRequired: 2,
     sunRequired: 2,
     cropValue: 20,
-    growthStages: [".", "t", "T"],
+    growthStages: ["_", ".", "t", "T"],
   },
   potato: {
     name: "potato",
@@ -83,6 +87,6 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     waterRequired: 1,
     sunRequired: 2,
     cropValue: 15,
-    growthStages: [".", "p", "P"],
+    growthStages: ["_", ".", "p", "P"],
   },
 };

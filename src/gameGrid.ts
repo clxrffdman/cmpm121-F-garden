@@ -23,12 +23,39 @@ export class GameGrid {
     this.initializeGrid();
   }
 
+  plantCarrot(y: number, x: number) {
+    if (this.grid[x][y].plant) {
+      const currPlant = this.grid[x][y].plant;
+      if (currPlant) {
+        currPlant.growthLevel = 1;
+        currPlant.growthAmount = 1;
+      }
+    }
+  }
+
+  plantPotato(y: number, x: number) {
+    if (this.grid[x][y].plant) {
+      const currPlant = this.grid[x][y].plant;
+      if (currPlant) {
+        console.log(currPlant.curIcon);
+        currPlant.curIcon = "p";
+        console.log(currPlant.curIcon);
+        currPlant.growthLevel = 2;
+        currPlant.growthAmount = 2;
+      }
+    }
+  }
+
   harvestPlant(y: number, x: number) {
     console.log("harvest plant");
     if (this.grid[x][y].plant) {
       const currPlant = this.grid[x][y].plant;
       this.player.reap(currPlant!);
-      this.grid[x][y].plant = undefined;
+      if (currPlant) {
+        currPlant.growthAmount = 0;
+        currPlant.growthLevel = 0;
+        currPlant.curIcon = "_";
+      }
     }
   }
 
@@ -37,7 +64,11 @@ export class GameGrid {
       console.log("Out of bounds, ", x, y);
       return false;
     }
-    if (this.grid[y][x].plant?.growthLevel != 0) {
+    if (
+      this.grid[y][x].plant?.growthLevel == 1 ||
+      this.grid[y][x].plant?.growthLevel == 2 ||
+      this.grid[y][x].plant?.growthLevel == 3
+    ) {
       return false;
     }
     return true;
@@ -56,7 +87,9 @@ export class GameGrid {
         if (cell.plant) {
           const numNeighbors = this.determineNumNeighbors(i, j);
           if (numNeighbors < NUM_NEIGHBORS_PLANT_CANT_GROW)
-            cell.plant!.grow(cell.waterLevel, this.sunLevel);
+            if (cell.plant!.growthLevel > 0) {
+              cell.plant!.grow(cell.waterLevel, this.sunLevel);
+            }
         }
       }
     }

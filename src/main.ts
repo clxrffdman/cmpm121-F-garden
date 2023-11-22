@@ -35,13 +35,81 @@ passTimeButton.addEventListener("click", () => {
 
 app.appendChild(passTimeButton);
 
+const carrotButton = document.createElement("button");
+carrotButton.textContent = "Plant Carrot";
+carrotButton.addEventListener("click", () => {
+  console.log(
+    gameGrid.cellAt(
+      gameGrid.player.highlightedX,
+      gameGrid.player.highlightedY,
+    )?.plant?.growthLevel,
+  );
+  if (
+    gameGrid != null &&
+    gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
+      ?.plant?.growthLevel == 0
+  ) {
+    if (
+      gameGrid.cellAt(
+        gameGrid.player.highlightedX,
+        gameGrid.player.highlightedY,
+      )
+    ) {
+      //console.log(gameGrid.player.highlightedX, gameGrid.player.highlightedY);
+      gameGrid.plantCarrot(
+        gameGrid.player.highlightedX,
+        gameGrid.player.highlightedY,
+      );
+    }
+    gameGrid.update();
+    checkWin();
+  }
+});
+
+app.appendChild(carrotButton);
+
+
+const potatoButton = document.createElement("button");
+potatoButton.textContent = "Plant Potato";
+potatoButton.addEventListener("click", () => {
+  console.log(
+    gameGrid.cellAt(
+      gameGrid.player.highlightedX,
+      gameGrid.player.highlightedY,
+    )?.plant?.growthLevel,
+  );
+  if (
+    gameGrid != null &&
+    gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
+      ?.plant?.growthLevel == 0
+  ) {
+    if (
+      gameGrid.cellAt(
+        gameGrid.player.highlightedX,
+        gameGrid.player.highlightedY,
+      )
+    ) {
+      //console.log(gameGrid.player.highlightedX, gameGrid.player.highlightedY);
+      gameGrid.plantPotato(
+        gameGrid.player.highlightedX,
+        gameGrid.player.highlightedY,
+      );
+    }
+    gameGrid.update();
+    checkWin();
+  }
+});
+
+app.appendChild(potatoButton);
+
+
 const harvestButton = document.createElement("button");
 harvestButton.textContent = "Harvest";
 harvestButton.addEventListener("click", () => {
   if (
     gameGrid != null &&
     gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
-      ?.plant?.growthLevel == 2
+      ?.plant?.growthLevel == 3
   ) {
     console.log("harvest"); //somewhere here make the plant go away
     if (
