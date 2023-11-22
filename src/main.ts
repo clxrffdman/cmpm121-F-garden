@@ -39,10 +39,8 @@ const carrotButton = document.createElement("button");
 carrotButton.textContent = "Plant Carrot";
 carrotButton.addEventListener("click", () => {
   console.log(
-    gameGrid.cellAt(
-      gameGrid.player.highlightedX,
-      gameGrid.player.highlightedY,
-    )?.plant?.growthLevel,
+    gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
+      ?.plant?.growthLevel,
   );
   if (
     gameGrid != null &&
@@ -68,15 +66,12 @@ carrotButton.addEventListener("click", () => {
 
 app.appendChild(carrotButton);
 
-
 const potatoButton = document.createElement("button");
 potatoButton.textContent = "Plant Potato";
 potatoButton.addEventListener("click", () => {
   console.log(
-    gameGrid.cellAt(
-      gameGrid.player.highlightedX,
-      gameGrid.player.highlightedY,
-    )?.plant?.growthLevel,
+    gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
+      ?.plant?.growthLevel,
   );
   if (
     gameGrid != null &&
@@ -101,7 +96,6 @@ potatoButton.addEventListener("click", () => {
 });
 
 app.appendChild(potatoButton);
-
 
 const harvestButton = document.createElement("button");
 harvestButton.textContent = "Harvest";
