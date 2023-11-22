@@ -24,12 +24,12 @@ export class Plant {
       this.growthLevel++;
       this.growthAmount +=
         this.species.growthStages.length / (this.species.maxGrowthLevel + 1);
-      //console.log("growth amount", this.growthAmount);
       this.curIcon = this.species.growthStages[Math.floor(this.growthAmount)];
     }
   }
 
   harvest(): Crop {
+    console.log("cropped");
     if (this.growthLevel == this.species.maxGrowthLevel) {
       return {
         type: this.species.name,

@@ -23,6 +23,15 @@ export class GameGrid {
     this.initializeGrid();
   }
 
+  harvestPlant(y: number, x:number){
+    console.log("harvest plant");
+    if(this.grid[x][y].plant){
+      const currPlant = this.grid[x][y].plant;
+      this.player.reap(currPlant!);
+      this.grid[x][y].plant = undefined;
+    }
+  }
+
   isValidPosition(x: number, y: number) {
     if (x < 0 || x >= this.gridSize || y < 0 || y >= this.gridSize) {
       console.log("Out of bounds, ", x, y);
@@ -54,6 +63,7 @@ export class GameGrid {
     this.updateWaterLevels();
     this.renderGrid();
   }
+
 
   determineNumNeighbors(i: number, j: number): number {
     let numNeighbors = 0;

@@ -1,11 +1,14 @@
 import { GameGrid } from "./gameGrid";
 import { gameGrid } from "./main";
+import { Plant } from "./plant";
 
 export class Player {
   /*TODO:
     - Interaction
     - Inventory (later)
     */
+  money:number;
+
   x: number;
   y: number;
   private gameGrid: GameGrid;
@@ -22,6 +25,7 @@ export class Player {
     this.highlightedY = 0;
     this.character = ">";
     this.lastInput = "ArrowRight";
+    this.money = 0;
   }
 
   move(dir: string) {
@@ -71,5 +75,11 @@ export class Player {
 
   renderPlayer() {
     gameGrid;
+  }
+
+  reap(plant: Plant){
+    this.money += plant.harvest().value;
+    console.log("reaped");
+    console.log("player money: ", this.money);
   }
 }
