@@ -24,7 +24,7 @@ export class Plant {
       this.growthLevel++;
       this.growthAmount +=
         this.species.growthStages.length / (this.species.maxGrowthLevel + 1);
-      console.log("growth amount", this.growthAmount);
+      //console.log("growth amount", this.growthAmount);
       this.curIcon = this.species.growthStages[Math.floor(this.growthAmount)];
     }
   }

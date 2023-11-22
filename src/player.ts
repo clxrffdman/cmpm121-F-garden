@@ -9,8 +9,8 @@ export class Player {
   x: number;
   y: number;
   private gameGrid: GameGrid;
-  private highlightedX: number;
-  private highlightedY: number;
+  public highlightedX: number; //maybe don't do highlight in player, do it in plant (from TA)
+  public highlightedY: number;
   public character: string;
   private lastInput: string;
 
@@ -49,7 +49,7 @@ export class Player {
       this.highlightedX,
       this.highlightedY,
     );
-    console.log(isValid);
+    //console.log(isValid);
     if (isValid) {
       this.move(dir);
     }

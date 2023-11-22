@@ -35,6 +35,24 @@ passTimeButton.addEventListener("click", () => {
 
 app.appendChild(passTimeButton);
 
+const harvestButton = document.createElement("button");
+harvestButton.textContent = "Harvest";
+harvestButton.addEventListener("click", () => {
+  if (
+    gameGrid != null &&
+    gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
+      ?.plant?.growthLevel == 2
+  ) {
+    console.log("harvest"); //somewhere here make the plant go away
+    gameGrid
+      .cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
+      ?.plant?.harvest();
+    gameGrid.update();
+  }
+});
+
+app.appendChild(harvestButton);
+
 // Add event listener for keydown event
 document.addEventListener("keydown", (event) => {
   const arrowKeys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];

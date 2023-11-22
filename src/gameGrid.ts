@@ -19,7 +19,7 @@ export class GameGrid {
   constructor(gridSize: number) {
     this.gridSize = gridSize;
     this.grid = [];
-    this.player = new Player(0, 0, this);
+    this.player = new Player(2, 2, this);
     this.initializeGrid();
   }
 
