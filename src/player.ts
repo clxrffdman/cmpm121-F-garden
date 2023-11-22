@@ -7,7 +7,7 @@ export class Player {
     - Interaction
     - Inventory (later)
     */
-  money:number;
+  money: number;
 
   x: number;
   y: number;
@@ -77,7 +77,7 @@ export class Player {
     gameGrid;
   }
 
-  reap(plant: Plant){
+  reap(plant: Plant) {
     this.money += plant.harvest().value;
     console.log("reaped");
     console.log("player money: ", this.money);

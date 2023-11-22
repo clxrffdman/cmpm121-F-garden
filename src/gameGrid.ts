@@ -23,9 +23,9 @@ export class GameGrid {
     this.initializeGrid();
   }
 
-  harvestPlant(y: number, x:number){
+  harvestPlant(y: number, x: number) {
     console.log("harvest plant");
-    if(this.grid[x][y].plant){
+    if (this.grid[x][y].plant) {
       const currPlant = this.grid[x][y].plant;
       this.player.reap(currPlant!);
       this.grid[x][y].plant = undefined;
@@ -63,7 +63,6 @@ export class GameGrid {
     this.updateWaterLevels();
     this.renderGrid();
   }
-
 
   determineNumNeighbors(i: number, j: number): number {
     let numNeighbors = 0;

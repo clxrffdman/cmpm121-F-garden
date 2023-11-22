@@ -44,9 +44,17 @@ harvestButton.addEventListener("click", () => {
       ?.plant?.growthLevel == 2
   ) {
     console.log("harvest"); //somewhere here make the plant go away
-    if(gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)){
-        gameGrid.harvestPlant(gameGrid.player.highlightedX, gameGrid.player.highlightedY);
-      }
+    if (
+      gameGrid.cellAt(
+        gameGrid.player.highlightedX,
+        gameGrid.player.highlightedY,
+      )
+    ) {
+      gameGrid.harvestPlant(
+        gameGrid.player.highlightedX,
+        gameGrid.player.highlightedY,
+      );
+    }
     gameGrid.update();
     checkWin();
   }
@@ -66,8 +74,8 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-function checkWin(){
-  if(gameGrid.player.money >= 100){
-    alert("win")
-  } 
+function checkWin() {
+  if (gameGrid.player.money >= 100) {
+    alert("win");
+  }
 }
