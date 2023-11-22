@@ -3,7 +3,7 @@ import { GameGrid } from "./gameGrid";
 
 const app: HTMLDivElement = document.querySelector("#app")!;
 
-const gameName = "121 Group 7 Garden Game";
+const gameName = "121 Group 7 Garden Game - F0";
 document.title = gameName;
 const header = document.createElement("h1");
 header.innerHTML = gameName;
