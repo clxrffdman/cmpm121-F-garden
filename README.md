@@ -59,7 +59,7 @@ Your team can earn partial credit for covering only a subset of the F0 requireme
 - [F0.g] A play scenario is completed when some condition is satisfied (e.g. at least X plants at growth level Y or above).
   The player's current goal is to aquire $100. Each time you harvest a plant you will be rewarded a certain amount of money based on what plant you are growing, and harvesting. Each time we update the game we check if the player has more than or equal to $100 dollars, and display a pop up if the player reached that goal.
 
-## Reflection
+## Reflection on F0
 
 Looking back on how you achieved the F0 requirements, how has your team’s plan changed? Did you reconsider any of the choices you previously described for Tools and Materials or your Roles? It would be very suspicious if you didn’t need to change anything. There’s learning value in you documenting how your team’s thinking has changed over time.
 
