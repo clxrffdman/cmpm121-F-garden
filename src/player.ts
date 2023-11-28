@@ -93,17 +93,20 @@ export class Player {
     console.log("player money: ", this.money);
   }
 
-  revertAction(redo : boolean){
-    
-    if((redo ? this.prevActionList.length : this.futureActionList.length) <= 0){
+  revertAction(redo: boolean) {
+    if (
+      (redo ? this.prevActionList.length : this.futureActionList.length) <= 0
+    ) {
       return;
     }
 
-    // retrieve last action + depending on type, 
-    // undo different elements of the player (money, location, etc) 
-    let action = redo ? this.prevActionList.pop() : this.futureActionList.pop();
+    // retrieve last action + depending on type,
+    // undo different elements of the player (money, location, etc)
+    const action = redo
+      ? this.prevActionList.pop()
+      : this.futureActionList.pop();
 
-    switch(action?.type){
+    switch (action?.type) {
       case "move":
         break;
       case "plant":
@@ -111,7 +114,5 @@ export class Player {
       case "reap":
         break;
     }
-
   }
-
 }
