@@ -16,54 +16,43 @@ export const gridContainer = document.createElement("div");
 app.appendChild(gridContainer);
 
 function updateSunLevel() {
-  gameGrid.sunLevel = Math.floor(Math.random() * 3);
+  // gameGrid.sunLevel = Math.floor(Math.random() * 3);
+  gameGrid.sunLevel = 3;
   sunLevelText.textContent = `Sun Level: ${gameGrid.sunLevel}`;
 }
 
 const gridSize = 5;
 export const gameGrid = new GameGrid(gridSize);
-gameGrid.update();
-gameGrid.renderGrid();
-updateSunLevel();
+updateGame();
 
 const passTimeButton = document.createElement("button");
 passTimeButton.textContent = "Pass Time";
 passTimeButton.addEventListener("click", () => {
-  updateSunLevel();
-  gameGrid.update();
+  updateGame();
 });
-
 app.appendChild(passTimeButton);
 
 const carrotButton = document.createElement("button");
 carrotButton.textContent = "Plant Carrot";
 carrotButton.addEventListener("click", () => {
-  console.log(
-    gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
-      ?.plant?.growthLevel,
-  );
+  
   if (
     gameGrid != null &&
     gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
-      ?.plant?.growthLevel == 0
   ) {
-    if (
-      gameGrid.cellAt(
-        gameGrid.player.highlightedX,
-        gameGrid.player.highlightedY,
-      )
-    ) {
-      //console.log(gameGrid.player.highlightedX, gameGrid.player.highlightedY);
-      gameGrid.plantCarrot(
-        gameGrid.player.highlightedX,
-        gameGrid.player.highlightedY,
-      );
-    }
-    gameGrid.update();
-    checkWin();
+    console.log(gameGrid.player.highlightedX, gameGrid.player.highlightedY);
+    gameGrid.plantSeeds(
+      gameGrid.player.highlightedX,
+      gameGrid.player.highlightedY,
+      "carrot",
+    );
+
+    console.log(
+      gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
+    );
+    updateGame();
   }
 });
-
 app.appendChild(carrotButton);
 
 const potatoButton = document.createElement("button");
@@ -71,30 +60,20 @@ potatoButton.textContent = "Plant Potato";
 potatoButton.addEventListener("click", () => {
   console.log(
     gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
-      ?.plant?.growthLevel,
   );
   if (
     gameGrid != null &&
     gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
-      ?.plant?.growthLevel == 0
   ) {
-    if (
-      gameGrid.cellAt(
-        gameGrid.player.highlightedX,
-        gameGrid.player.highlightedY,
-      )
-    ) {
-      //console.log(gameGrid.player.highlightedX, gameGrid.player.highlightedY);
-      gameGrid.plantPotato(
-        gameGrid.player.highlightedX,
-        gameGrid.player.highlightedY,
-      );
-    }
-    gameGrid.update();
-    checkWin();
+    console.log(gameGrid.player.highlightedX, gameGrid.player.highlightedY);
+    gameGrid.plantSeeds(
+      gameGrid.player.highlightedX,
+      gameGrid.player.highlightedY,
+      "potato",
+    );
+    updateGame();
   }
 });
-
 app.appendChild(potatoButton);
 
 const harvestButton = document.createElement("button");
@@ -117,11 +96,9 @@ harvestButton.addEventListener("click", () => {
         gameGrid.player.highlightedY,
       );
     }
-    gameGrid.update();
-    checkWin();
+    updateGame();
   }
 });
-
 app.appendChild(harvestButton);
 
 // Add event listener for keydown event
@@ -135,6 +112,13 @@ document.addEventListener("keydown", (event) => {
     gameGrid.update();
   }
 });
+
+
+function updateGame(){
+  updateSunLevel();
+  gameGrid.update();
+  checkWin();
+}
 
 function checkWin() {
   if (gameGrid.player.money >= 100) {

@@ -23,27 +23,8 @@ export class GameGrid {
     this.initializeGrid();
   }
 
-  plantCarrot(y: number, x: number) {
-    if (this.grid[x][y].plant) {
-      const currPlant = this.grid[x][y].plant;
-      if (currPlant) {
-        currPlant.growthLevel = 1;
-        currPlant.growthAmount = 1;
-      }
-    }
-  }
-
-  plantPotato(y: number, x: number) {
-    if (this.grid[x][y].plant) {
-      const currPlant = this.grid[x][y].plant;
-      if (currPlant) {
-        console.log(currPlant.curIcon);
-        currPlant.curIcon = "p";
-        console.log(currPlant.curIcon);
-        currPlant.growthLevel = 2;
-        currPlant.growthAmount = 2;
-      }
-    }
+  plantSeeds(x: number, y: number, plant: string){
+    this.grid[y][x].plant = makePlant(plant);
   }
 
   harvestPlant(y: number, x: number) {
@@ -51,11 +32,7 @@ export class GameGrid {
     if (this.grid[x][y].plant) {
       const currPlant = this.grid[x][y].plant;
       this.player.reap(currPlant!);
-      if (currPlant) {
-        currPlant.growthAmount = 0;
-        currPlant.growthLevel = 0;
-        currPlant.curIcon = "_";
-      }
+      this.grid[x][y].plant = undefined;
     }
   }
 
@@ -85,9 +62,12 @@ export class GameGrid {
       for (let j = 0; j < this.gridSize; j++) {
         const cell = this.grid[i][j];
         if (cell.plant) {
+          console.log(cell.plant);
           const numNeighbors = this.determineNumNeighbors(i, j);
           if (numNeighbors < NUM_NEIGHBORS_PLANT_CANT_GROW)
-            if (cell.plant!.growthLevel > 0) {
+          console.log("neighbors");
+            if (cell.plant.growthLevel < cell.plant.species.maxGrowthLevel) {
+              console.log("can grow")
               cell.plant!.grow(cell.waterLevel, this.sunLevel);
             }
         }
@@ -118,7 +98,7 @@ export class GameGrid {
     for (let i = 0; i < this.gridSize; i++) {
       const row = [];
       for (let j = 0; j < this.gridSize; j++) {
-        row.push({ waterLevel: 0, plant: makePlant("carrot") });
+        row.push({ waterLevel: 0, plant: undefined});
       }
       this.grid.push(row);
     }
