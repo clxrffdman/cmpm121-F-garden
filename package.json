@@ -31,5 +31,8 @@
     ],
     "rules": {}
   },
-  "prettier": {}
+  "prettier": {},
+  "dependencies": {
+    "murmur-32": "^1.0.0"
+  }
 }

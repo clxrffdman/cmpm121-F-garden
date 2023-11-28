@@ -1,6 +1,7 @@
 import { Plant, makePlant } from "./plant";
 import { gridContainer } from "./main";
 import { Player } from "./player";
+import luck from "./luck";
 
 const NUM_NEIGHBORS_PLANT_CANT_GROW = 4;
 
@@ -12,6 +13,7 @@ export interface plantCell {
 export class GameGrid {
   private gridSize: number;
   private grid: plantCell[][];
+  public timeIndex = 0;
   public sunLevel = 0;
   public player: Player;
   maxWaterLevel = 10;
@@ -75,6 +77,7 @@ export class GameGrid {
     }
     this.updateWaterLevels();
     this.renderGrid();
+    this.timeIndex++;
   }
 
   determineNumNeighbors(i: number, j: number): number {
@@ -108,7 +111,7 @@ export class GameGrid {
     for (let i = 0; i < this.gridSize; i++) {
       for (let j = 0; j < this.gridSize; j++) {
         let waterLevel = this.grid[i][j].waterLevel;
-        waterLevel += Math.floor(Math.random() * 5);
+        waterLevel += Math.floor(luck(this.timeIndex.toString()) * 5);
         if (waterLevel > this.maxWaterLevel) {
           waterLevel = this.maxWaterLevel;
         }

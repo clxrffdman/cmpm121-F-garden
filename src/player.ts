@@ -2,6 +2,12 @@ import { GameGrid } from "./gameGrid";
 import { gameGrid } from "./main";
 import { Plant } from "./plant";
 
+export interface PlayerAction {
+  type: string;
+  oldValue: string;
+  newValue: string;
+}
+
 export class Player {
   /*TODO:
     - Interaction
@@ -16,6 +22,8 @@ export class Player {
   public highlightedY: number;
   public character: string;
   private lastInput: string;
+  private prevActionList: PlayerAction[];
+  private futureActionList: PlayerAction[];
 
   constructor(x: number, y: number, grid: GameGrid) {
     this.x = x;
@@ -26,6 +34,8 @@ export class Player {
     this.character = ">";
     this.lastInput = "ArrowRight";
     this.money = 0;
+    this.prevActionList = [];
+    this.futureActionList = [];
   }
 
   move(dir: string) {
@@ -82,4 +92,26 @@ export class Player {
     console.log("reaped");
     console.log("player money: ", this.money);
   }
+
+  revertAction(redo : boolean){
+    
+    if((redo ? this.prevActionList.length : this.futureActionList.length) <= 0){
+      return;
+    }
+
+    // retrieve last action + depending on type, 
+    // undo different elements of the player (money, location, etc) 
+    let action = redo ? this.prevActionList.pop() : this.futureActionList.pop();
+
+    switch(action?.type){
+      case "move":
+        break;
+      case "plant":
+        break;
+      case "reap":
+        break;
+    }
+
+  }
+
 }
