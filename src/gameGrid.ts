@@ -4,6 +4,7 @@ import { Player } from "./player";
 import luck from "./luck";
 
 const NUM_NEIGHBORS_PLANT_CANT_GROW = 4;
+const WATER_SCALE = 1.1;
 
 export interface plantCell {
   waterLevel: number;
@@ -112,7 +113,8 @@ export class GameGrid {
       for (let j = 0; j < this.gridSize; j++) {
         let waterLevel = this.grid[i][j].waterLevel;
         waterLevel += Math.floor(
-          luck(this.timeIndex.toString() + i.toString() + j.toString()) * 5,
+          luck(this.timeIndex.toString() + i.toString() + j.toString()) *
+            WATER_SCALE,
         );
         if (waterLevel > this.maxWaterLevel) {
           waterLevel = this.maxWaterLevel;
