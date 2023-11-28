@@ -23,7 +23,7 @@ export class GameGrid {
     this.initializeGrid();
   }
 
-  plantSeeds(x: number, y: number, plant: string){
+  plantSeeds(x: number, y: number, plant: string) {
     this.grid[y][x].plant = makePlant(plant);
   }
 
@@ -65,11 +65,11 @@ export class GameGrid {
           console.log(cell.plant);
           const numNeighbors = this.determineNumNeighbors(i, j);
           if (numNeighbors < NUM_NEIGHBORS_PLANT_CANT_GROW)
-          console.log("neighbors");
-            if (cell.plant.growthLevel < cell.plant.species.maxGrowthLevel) {
-              console.log("can grow")
-              cell.plant!.grow(cell.waterLevel, this.sunLevel);
-            }
+            console.log("neighbors");
+          if (cell.plant.growthLevel < cell.plant.species.maxGrowthLevel) {
+            console.log("can grow");
+            cell.plant!.grow(cell.waterLevel, this.sunLevel);
+          }
         }
       }
     }
@@ -98,7 +98,7 @@ export class GameGrid {
     for (let i = 0; i < this.gridSize; i++) {
       const row = [];
       for (let j = 0; j < this.gridSize; j++) {
-        row.push({ waterLevel: 0, plant: undefined});
+        row.push({ waterLevel: 0, plant: undefined });
       }
       this.grid.push(row);
     }

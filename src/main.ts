@@ -35,7 +35,6 @@ app.appendChild(passTimeButton);
 const carrotButton = document.createElement("button");
 carrotButton.textContent = "Plant Carrot";
 carrotButton.addEventListener("click", () => {
-  
   if (
     gameGrid != null &&
     gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
@@ -48,7 +47,10 @@ carrotButton.addEventListener("click", () => {
     );
 
     console.log(
-      gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
+      gameGrid.cellAt(
+        gameGrid.player.highlightedX,
+        gameGrid.player.highlightedY,
+      ),
     );
     updateGame();
   }
@@ -59,7 +61,7 @@ const potatoButton = document.createElement("button");
 potatoButton.textContent = "Plant Potato";
 potatoButton.addEventListener("click", () => {
   console.log(
-    gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
+    gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY),
   );
   if (
     gameGrid != null &&
@@ -113,8 +115,7 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-
-function updateGame(){
+function updateGame() {
   updateSunLevel();
   gameGrid.update();
   checkWin();
