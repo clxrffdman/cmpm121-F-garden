@@ -63,7 +63,6 @@ export class Player {
       this.highlightedX,
       this.highlightedY,
     );
-    //console.log(isValid);
     if (isValid) {
       this.move(dir);
     }
@@ -89,7 +88,6 @@ export class Player {
 
   reap(plant: Plant) {
     this.money += plant.harvest().value;
-    console.log("reaped");
     console.log("player money: ", this.money);
   }
 

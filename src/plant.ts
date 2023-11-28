@@ -29,11 +29,10 @@ export class Plant {
   }
 
   harvest(): Crop {
-    console.log("cropped");
     if (this.growthLevel == this.species.maxGrowthLevel) {
       return {
         type: this.species.name,
-        value: 10,
+        value: this.species.cropValue,
       };
     }
     return {

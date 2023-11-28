@@ -31,7 +31,6 @@ export class GameGrid {
   }
 
   harvestPlant(y: number, x: number) {
-    console.log("harvest plant");
     if (this.grid[x][y].plant) {
       const currPlant = this.grid[x][y].plant;
       this.player.reap(currPlant!);
@@ -65,14 +64,11 @@ export class GameGrid {
       for (let j = 0; j < this.gridSize; j++) {
         const cell = this.grid[i][j];
         if (cell.plant) {
-          console.log(cell.plant);
           const numNeighbors = this.determineNumNeighbors(i, j);
           if (numNeighbors < NUM_NEIGHBORS_PLANT_CANT_GROW)
-            console.log("neighbors");
-          if (cell.plant.growthLevel < cell.plant.species.maxGrowthLevel) {
-            console.log("can grow");
-            cell.plant!.grow(cell.waterLevel, this.sunLevel);
-          }
+            if (cell.plant.growthLevel < cell.plant.species.maxGrowthLevel) {
+              cell.plant!.grow(cell.waterLevel, this.sunLevel);
+            }
         }
       }
     }

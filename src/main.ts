@@ -32,80 +32,10 @@ passTimeButton.addEventListener("click", () => {
 });
 app.appendChild(passTimeButton);
 
-const carrotButton = document.createElement("button");
-carrotButton.textContent = "Plant Carrot";
-carrotButton.addEventListener("click", () => {
-  if (
-    gameGrid != null &&
-    gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
-  ) {
-    console.log(gameGrid.player.highlightedX, gameGrid.player.highlightedY);
-    gameGrid.plantSeeds(
-      gameGrid.player.highlightedX,
-      gameGrid.player.highlightedY,
-      "carrot",
-    );
-
-    console.log(
-      gameGrid.cellAt(
-        gameGrid.player.highlightedX,
-        gameGrid.player.highlightedY,
-      ),
-    );
-    updateGame();
-  }
-});
-app.appendChild(carrotButton);
-
-const potatoButton = document.createElement("button");
-potatoButton.textContent = "Plant Potato";
-potatoButton.addEventListener("click", () => {
-  placePlant("potato");
-});
-app.appendChild(potatoButton);
-
-const harvestButton = document.createElement("button");
-harvestButton.textContent = "Harvest";
-harvestButton.addEventListener("click", () => {
-  if (
-    gameGrid != null &&
-    gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
-      ?.plant?.growthLevel ==
-      gameGrid.cellAt(
-        gameGrid.player.highlightedX,
-        gameGrid.player.highlightedY,
-      )?.plant?.species.maxGrowthLevel
-  ) {
-    console.log("harvest"); //somewhere here make the plant go away
-    if (
-      gameGrid.cellAt(
-        gameGrid.player.highlightedX,
-        gameGrid.player.highlightedY,
-      )
-    ) {
-      gameGrid.harvestPlant(
-        gameGrid.player.highlightedX,
-        gameGrid.player.highlightedY,
-      );
-    }
-    updateGame();
-  }
-});
-app.appendChild(harvestButton);
-
 // Add event listener for keydown event for movement
 document.addEventListener("keydown", (event) => {
   const arrowKeys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
   const key = event.key;
-
-  if (arrowKeys.includes(key)) {
-    gameGrid.player.directionInput(key);
-    updateSunLevel();
-    gameGrid.update();
-  }
-});
-
-document.addEventListener("keydown", (event) => {
   const plantKeys = [
     "a",
     "b",
@@ -162,9 +92,19 @@ document.addEventListener("keydown", (event) => {
     y: "yam",
     z: "zuccini",
   };
-  const key = event.key;
+
+  if (arrowKeys.includes(key)) {
+    gameGrid.player.directionInput(key);
+    updateSunLevel();
+    gameGrid.update();
+  }
+
   if (plantKeys.includes(key)) {
     placePlant(letterToPlantMap[key]);
+  }
+
+  if (key == " ") {
+    harvest();
   }
 });
 
@@ -181,19 +121,47 @@ function checkWin() {
 }
 
 function placePlant(plant: string) {
-  console.log(
-    gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY),
-  );
   if (
     gameGrid != null &&
-    gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
+    gameGrid.cellAt(
+      gameGrid.player.highlightedX,
+      gameGrid.player.highlightedY,
+    ) &&
+    !gameGrid.cellAt(
+      gameGrid.player.highlightedX,
+      gameGrid.player.highlightedY,
+    )!.plant
   ) {
-    console.log(gameGrid.player.highlightedX, gameGrid.player.highlightedY);
     gameGrid.plantSeeds(
       gameGrid.player.highlightedX,
       gameGrid.player.highlightedY,
       plant,
     );
+    updateGame();
+  }
+}
+
+function harvest() {
+  if (
+    gameGrid != null &&
+    gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
+      ?.plant?.growthLevel ==
+      gameGrid.cellAt(
+        gameGrid.player.highlightedX,
+        gameGrid.player.highlightedY,
+      )?.plant?.species.maxGrowthLevel
+  ) {
+    if (
+      gameGrid.cellAt(
+        gameGrid.player.highlightedX,
+        gameGrid.player.highlightedY,
+      )
+    ) {
+      gameGrid.harvestPlant(
+        gameGrid.player.highlightedX,
+        gameGrid.player.highlightedY,
+      );
+    }
     updateGame();
   }
 }
