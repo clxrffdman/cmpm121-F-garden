@@ -23,12 +23,8 @@ export class Plant {
     ) {
       this.growthLevel++;
       this.growthAmount +=
-        this.species.growthStages.length / (this.species.maxGrowthLevel + 1);
-      if (this.curIcon == "p") {
-        this.curIcon = "P";
-      } else {
-        this.curIcon = this.species.growthStages[Math.floor(this.growthAmount)];
-      }
+      this.species.growthStages.length / (this.species.maxGrowthLevel + 1);
+      this.curIcon = this.species.growthStages[Math.floor(this.growthAmount)];
     }
   }
 

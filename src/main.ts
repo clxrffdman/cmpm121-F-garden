@@ -84,7 +84,7 @@ harvestButton.addEventListener("click", () => {
   if (
     gameGrid != null &&
     gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
-      ?.plant?.growthLevel == 3
+      ?.plant?.growthLevel == gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)?.plant?.species.maxGrowthLevel
   ) {
     console.log("harvest"); //somewhere here make the plant go away
     if (
