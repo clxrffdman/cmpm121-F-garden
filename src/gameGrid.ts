@@ -111,7 +111,7 @@ export class GameGrid {
     for (let i = 0; i < this.gridSize; i++) {
       for (let j = 0; j < this.gridSize; j++) {
         let waterLevel = this.grid[i][j].waterLevel;
-        waterLevel += Math.floor(luck(this.timeIndex.toString()) * 5);
+        waterLevel += Math.floor(luck((this.timeIndex).toString()+i.toString()+j.toString()) * 5);
         if (waterLevel > this.maxWaterLevel) {
           waterLevel = this.maxWaterLevel;
         }
