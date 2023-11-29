@@ -2,24 +2,26 @@ import { GameGrid } from "./gameGrid";
 import { gameGrid } from "./main";
 import { Plant } from "./plant";
 
-export interface PlayerAction {
-  type: string;
-  oldValue: string;
-  newValue: string;
+export interface SavedPlayer {
+  x: number;
+  y: number;
+  money: number;
+  lastInput: string;
 }
 
 export class Player {
-  money: number;
-
-  x: number;
-  y: number;
+  /*TODO:
+    - Interaction
+    - Inventory (later)
+    */
+  public money: number;
+  public x: number;
+  public y: number;
   private gameGrid: GameGrid;
   public highlightedX: number; //maybe don't do highlight in player, do it in plant (from TA)
   public highlightedY: number;
   public character: string;
-  private lastInput: string;
-  private prevActionList: PlayerAction[];
-  private futureActionList: PlayerAction[];
+  public lastInput: string;
 
   constructor(x: number, y: number, grid: GameGrid) {
     this.x = x;
@@ -30,8 +32,6 @@ export class Player {
     this.character = ">";
     this.lastInput = "ArrowRight";
     this.money = 0;
-    this.prevActionList = [];
-    this.futureActionList = [];
   }
 
   move(dir: string) {
@@ -87,26 +87,42 @@ export class Player {
     console.log("player money: ", this.money);
   }
 
-  revertAction(redo: boolean) {
-    if (
-      (redo ? this.prevActionList.length : this.futureActionList.length) <= 0
-    ) {
-      return;
+  setPosition(newX: number, newY: number) {
+    if (this.gameGrid.isEmptyCell(newX, newY)) {
+      this.x = newX;
+      this.y = newY;
+      this.renderPlayer();
     }
+  }
 
-    // retrieve last action + depending on type,
-    // undo different elements of the player (money, location, etc)
-    const action = redo
-      ? this.prevActionList.pop()
-      : this.futureActionList.pop();
+  serialize() {
+    const serializedPlayerState: SavedPlayer = {
+      x: this.x,
+      y: this.y,
+      money: this.money,
+      lastInput: this.lastInput,
+    };
+    const serializedPlayerString = JSON.stringify(serializedPlayerState);
+    console.log(serializedPlayerString);
+    return serializedPlayerString;
+  }
 
-    switch (action?.type) {
-      case "move":
-        break;
-      case "plant":
-        break;
-      case "reap":
-        break;
-    }
+  loadFromSerialized(json: string) {
+    const p: SavedPlayer = JSON.parse(json);
+    this.x = p.x;
+    this.y = p.y;
+    this.lastInput = p.lastInput;
+    const dirData: { [k: string]: [string, [number, number]] } = {
+      //In the format "key: [Character, [x, y]]"
+      ArrowUp: ["^", [0, -1]],
+      ArrowDown: ["v", [0, 1]],
+      ArrowLeft: ["<", [-1, 0]],
+      ArrowRight: [">", [1, 0]],
+    };
+    this.character = dirData[this.lastInput][0];
+    this.highlightedX = this.x + dirData[this.lastInput][1][0];
+    this.highlightedY = this.y + dirData[this.lastInput][1][1];
+    this.money = p.money;
+    this.gameGrid.renderGrid();
   }
 }
