@@ -13,7 +13,7 @@ export interface plantCell {
 
 export class GameGrid {
   private gridSize: number;
-  private grid: plantCell[][];
+  private grid: plantCell[];
   public timeIndex = 0;
   public sunLevel = 0;
   public player: Player;
@@ -27,26 +27,29 @@ export class GameGrid {
   }
 
   plantSeeds(x: number, y: number, plant: string) {
-    this.grid[y][x].plant = makePlant(plant);
-  }
-
-  harvestPlant(y: number, x: number) {
-    if (this.grid[x][y].plant) {
-      const currPlant = this.grid[x][y].plant;
-      this.player.reap(currPlant!);
-      this.grid[x][y].plant = undefined;
+    const cell = this.cellAt(x, y);
+    if (cell) {
+      cell.plant = makePlant(plant);
     }
   }
 
-  isValidPosition(x: number, y: number) {
+  harvestPlant(y: number, x: number) {
+    const currPlant = this.cellAt(x, y)?.plant;
+    if (currPlant) {
+      this.player.reap(currPlant);
+      this.cellAt(x, y)!.plant = undefined;
+    }
+  }
+
+  isEmptyCell(x: number, y: number) {
     if (x < 0 || x >= this.gridSize || y < 0 || y >= this.gridSize) {
       console.log("Out of bounds, ", x, y);
       return false;
     }
     if (
-      this.grid[y][x].plant?.growthLevel == 1 ||
-      this.grid[y][x].plant?.growthLevel == 2 ||
-      this.grid[y][x].plant?.growthLevel == 3
+      this.cellAt(x, y)?.plant?.growthLevel == 1 ||
+      this.cellAt(x, y)?.plant?.growthLevel == 2 ||
+      this.cellAt(x, y)?.plant?.growthLevel == 3
     ) {
       return false;
     }
@@ -56,14 +59,14 @@ export class GameGrid {
   cellAt(x: number, y: number): plantCell | undefined {
     if (x < 0 || x >= this.gridSize || y < 0 || y >= this.gridSize)
       return undefined;
-    return this.grid[y]?.at(x);
+    return this.grid[y * this.gridSize + x];
   }
 
   update() {
     for (let i = 0; i < this.gridSize; i++) {
       for (let j = 0; j < this.gridSize; j++) {
-        const cell = this.grid[i][j];
-        if (cell.plant) {
+        const cell = this.cellAt(i, j);
+        if (cell?.plant) {
           const numNeighbors = this.determineNumNeighbors(i, j);
           if (numNeighbors < NUM_NEIGHBORS_PLANT_CANT_GROW)
             if (cell.plant.growthLevel < cell.plant.species.maxGrowthLevel) {
@@ -79,35 +82,32 @@ export class GameGrid {
 
   determineNumNeighbors(i: number, j: number): number {
     let numNeighbors = 0;
-    if (this.cellAt(j, i - 1)?.plant) {
+    if (this.cellAt(i - 1, j)?.plant) {
       numNeighbors++;
     }
-    if (this.cellAt(j + 1, i)?.plant) {
+    if (this.cellAt(i, j + 1)?.plant) {
       numNeighbors++;
     }
-    if (this.cellAt(j, i + 1)?.plant) {
+    if (this.cellAt(i + 1, j)?.plant) {
       numNeighbors++;
     }
-    if (this.cellAt(j - 1, i)?.plant) {
+    if (this.cellAt(i, j - 1)?.plant) {
       numNeighbors++;
     }
     return numNeighbors;
   }
 
   initializeGrid() {
-    for (let i = 0; i < this.gridSize; i++) {
-      const row = [];
-      for (let j = 0; j < this.gridSize; j++) {
-        row.push({ waterLevel: 0, plant: undefined });
-      }
-      this.grid.push(row);
+    for (let i = 0; i < Math.pow(this.gridSize, 2); i++) {
+      this.grid.push({ waterLevel: 0, plant: undefined });
     }
   }
 
   updateWaterLevels() {
     for (let i = 0; i < this.gridSize; i++) {
       for (let j = 0; j < this.gridSize; j++) {
-        let waterLevel = this.grid[i][j].waterLevel;
+        let waterLevel = this.cellAt(i, j)?.waterLevel;
+        if (waterLevel == null) throw new Error("Water level is null");
         waterLevel += Math.floor(
           luck(this.timeIndex.toString() + i.toString() + j.toString()) *
             WATER_SCALE,
@@ -115,27 +115,27 @@ export class GameGrid {
         if (waterLevel > this.maxWaterLevel) {
           waterLevel = this.maxWaterLevel;
         }
-        this.grid[i][j].waterLevel = waterLevel;
+        this.cellAt(i, j)!.waterLevel = waterLevel;
       }
     }
   }
 
   renderGrid() {
     gridContainer.innerHTML = "";
-    for (let i = 0; i < this.gridSize; i++) {
+    for (let y = 0; y < this.gridSize; y++) {
       const row = document.createElement("div");
       row.setAttribute("style", "display: flex; flex-direction: row;");
 
-      for (let j = 0; j < this.gridSize; j++) {
+      for (let x = 0; x < this.gridSize; x++) {
         const cell = document.createElement("div");
-        const waterLevel = this.grid[i][j].waterLevel;
+        const waterLevel = this.cellAt(x, y)!.waterLevel;
         const color = `hsl(${30 + waterLevel * 7}, 50%, 50%)`;
         cell.setAttribute(
           "style",
           `background-color: ${color}; width: 30px; height: 30px;`,
         );
 
-        const character = this.grid[i][j].plant?.curIcon;
+        const character = this.cellAt(x, y)?.plant?.curIcon;
         if (character) {
           const characterText = document.createElement("span");
           characterText.setAttribute(
@@ -146,7 +146,7 @@ export class GameGrid {
           cell.appendChild(characterText);
         }
 
-        if (this.player.x == j && this.player.y == i) {
+        if (this.player.x == x && this.player.y == y) {
           const playerText = document.createElement("span");
           playerText.setAttribute(
             "style",
@@ -160,8 +160,8 @@ export class GameGrid {
         cell.setAttribute(
           "title",
           `Water Level: ${waterLevel}\nNeighbors:${this.determineNumNeighbors(
-            i,
-            j,
+            y,
+            x,
           )}`,
         );
 
