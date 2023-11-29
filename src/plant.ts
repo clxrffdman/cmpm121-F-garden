@@ -30,6 +30,7 @@ export class Plant {
 
   harvest(): Crop {
     if (this.growthLevel == this.species.maxGrowthLevel) {
+      console.log("harvested: ", this.species.name);
       return {
         type: this.species.name,
         value: this.species.cropValue,
@@ -95,10 +96,10 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
   },
   eggplant: {
     name: "eggplant",
-    maxGrowthLevel: 1,
-    waterRequired: 1,
-    sunRequired: 1,
-    cropValue: 0,
+    maxGrowthLevel: 6,
+    waterRequired: 4,
+    sunRequired: 2,
+    cropValue: 10,
     growthStages: ["_", ".", "e", "E"],
   },
   fig: {
@@ -223,15 +224,15 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
   },
   ugni: {
     name: "ugni",
-    maxGrowthLevel: 40,
+    maxGrowthLevel: 10,
     waterRequired: 10,
     sunRequired: 3,
-    cropValue: 100000,
+    cropValue: 10,
     growthStages: ["_", ".", "u", "U"],
   },
   vanilla: {
     name: "vanilla",
-    maxGrowthLevel: 15,
+    maxGrowthLevel: 14,
     waterRequired: 10,
     sunRequired: 1,
     cropValue: 40,

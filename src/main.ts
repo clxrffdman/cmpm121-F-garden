@@ -16,8 +16,7 @@ export const gridContainer = document.createElement("div");
 app.appendChild(gridContainer);
 
 function updateSunLevel() {
-  // gameGrid.sunLevel = Math.floor(Math.random() * 3);
-  gameGrid.sunLevel = 3;
+  gameGrid.sunLevel = Math.floor(Math.random() * 4);
   sunLevelText.textContent = `Sun Level: ${gameGrid.sunLevel}`;
 }
 
@@ -145,11 +144,7 @@ function harvest() {
   if (
     gameGrid != null &&
     gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
-      ?.plant?.growthLevel ==
-      gameGrid.cellAt(
-        gameGrid.player.highlightedX,
-        gameGrid.player.highlightedY,
-      )?.plant?.species.maxGrowthLevel
+      ?.plant
   ) {
     if (
       gameGrid.cellAt(

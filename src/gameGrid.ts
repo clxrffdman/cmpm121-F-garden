@@ -4,7 +4,7 @@ import { Player } from "./player";
 import luck from "./luck";
 
 const NUM_NEIGHBORS_PLANT_CANT_GROW = 4;
-const WATER_SCALE = 1.1;
+const WATER_SCALE = 1.5;
 
 export interface plantCell {
   waterLevel: number;

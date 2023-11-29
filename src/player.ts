@@ -9,10 +9,6 @@ export interface PlayerAction {
 }
 
 export class Player {
-  /*TODO:
-    - Interaction
-    - Inventory (later)
-    */
   money: number;
 
   x: number;
