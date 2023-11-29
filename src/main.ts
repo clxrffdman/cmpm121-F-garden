@@ -1,5 +1,6 @@
 import "./style.css";
-import { GameGrid } from "./gameGrid";
+import { GameGrid, plantCell } from "./gameGrid";
+import { plantSpeciesArray, makePlant } from "./plant";
 
 const app: HTMLDivElement = document.querySelector("#app")!;
 
@@ -20,9 +21,11 @@ function updateSunLevel() {
   sunLevelText.textContent = `Sun Level: ${gameGrid.sunLevel}`;
 }
 
-const gridSize = 26;
-export const gameGrid = new GameGrid(gridSize);
+const GRID_SIZE = 26;
+export const gameGrid = new GameGrid(GRID_SIZE);
 updateGame();
+
+const buffer = new ArrayBuffer(GRID_SIZE * GRID_SIZE * 3);
 
 const passTimeButton = document.createElement("button");
 passTimeButton.textContent = "Pass Time";
@@ -30,6 +33,21 @@ passTimeButton.addEventListener("click", () => {
   updateGame();
 });
 app.appendChild(passTimeButton);
+
+const serializeButton = document.createElement("button");
+serializeButton.textContent = "serialize";
+serializeButton.addEventListener("click", () => {
+  serializeGrid(buffer);
+});
+app.appendChild(serializeButton);
+
+const deserializeButton = document.createElement("button");
+deserializeButton.textContent = "deserialize";
+deserializeButton.addEventListener("click", () => {
+  deserializeGrid(buffer);
+  updateGame();
+});
+app.appendChild(deserializeButton);
 
 // Add event listener for keydown event for movement
 document.addEventListener("keydown", (event) => {
@@ -158,5 +176,54 @@ function harvest() {
       );
     }
     updateGame();
+  }
+}
+
+function serializeCell(cell: plantCell, window: Uint8Array) {
+  const currCell = cell;
+  const waterLevel = currCell?.waterLevel;
+  let species: number;
+  plantSpeciesArray.indexOf(currCell?.plant?.species?.name!) == -1
+    ? (species = 0)
+    : (species = plantSpeciesArray.indexOf(currCell?.plant?.species?.name!));
+  const growthLevel = currCell?.plant?.growthLevel;
+  window[0] = waterLevel!;
+  window[1] = species;
+  window[2] = growthLevel!;
+}
+
+function deserializeCell(cell: plantCell, window: Uint8Array) {
+  const currCell = cell;
+  currCell.waterLevel = window[0];
+  if (window[1] == 0) {
+    currCell.plant = undefined;
+  } else {
+    currCell.plant = makePlant(plantSpeciesArray[window[1]]);
+    currCell.plant!.deserialize(window[2]);
+  }
+}
+
+function serializeGrid(buffer: ArrayBuffer) {
+  for (let y = 0; y < GRID_SIZE; y++) {
+    for (let x = 0; x < GRID_SIZE; x++) {
+      const currCell = gameGrid.cellAt(x, y);
+      const window = new Uint8Array(buffer, (y * GRID_SIZE + x) * 3, 3);
+      serializeCell(currCell!, window);
+    }
+  }
+
+  const viewWindow = new Uint8Array(buffer);
+  for (const num of viewWindow) {
+    console.log(num);
+  }
+}
+
+function deserializeGrid(buffer: ArrayBuffer) {
+  for (let y = 0; y < GRID_SIZE; y++) {
+    for (let x = 0; x < GRID_SIZE; x++) {
+      const currCell = gameGrid.cellAt(x, y);
+      const window = new Uint8Array(buffer, (y * GRID_SIZE + x) * 3, 3);
+      deserializeCell(currCell!, window);
+    }
   }
 }

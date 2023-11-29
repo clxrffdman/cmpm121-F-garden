@@ -42,7 +42,7 @@ export class Player {
     else if (dir == "ArrowLeft") newX--;
     else if (dir == "ArrowRight") newX++;
 
-    if (this.gameGrid.isValidPosition(newX, newY)) {
+    if (this.gameGrid.isEmptyCell(newX, newY)) {
       this.x = newX;
       this.y = newY;
       this.changePlayerOrientation(dir);
@@ -55,7 +55,7 @@ export class Player {
       this.changePlayerOrientation(dir);
       return;
     }
-    const isValid = this.gameGrid.isValidPosition(
+    const isValid = this.gameGrid.isEmptyCell(
       this.highlightedX,
       this.highlightedY,
     );

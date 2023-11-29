@@ -41,6 +41,14 @@ export class Plant {
       value: 1,
     };
   }
+
+  deserialize(growthLevel: number) {
+    this.growthLevel = growthLevel;
+    this.growthAmount =
+      growthLevel *
+      (this.species.growthStages.length / (this.species.maxGrowthLevel + 1));
+    this.curIcon = this.species.growthStages[this.growthAmount];
+  }
 }
 
 export function makePlant(type: string): Plant | undefined {
@@ -271,3 +279,32 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     growthStages: ["_", ".", "z", "Z"],
   },
 };
+
+export const plantSpeciesArray: string[] = [
+  "apple",
+  "banana",
+  "carrot",
+  "daikon",
+  "eggplant",
+  "fig",
+  "grape",
+  "horseraddish",
+  "indonesianlime",
+  "jackfruit",
+  "kiwi",
+  "lemon",
+  "maize",
+  "nectarine",
+  "orange",
+  "potato",
+  "quince",
+  "raddish",
+  "squash",
+  "tomato",
+  "ugni",
+  "vanilla",
+  "watermelon",
+  "xigua",
+  "yam",
+  "zuccini",
+];
