@@ -46,11 +46,8 @@ export class GameGrid {
       console.log("Out of bounds, ", x, y);
       return false;
     }
-    if (
-      this.cellAt(x, y)?.plant?.growthLevel == 1 ||
-      this.cellAt(x, y)?.plant?.growthLevel == 2 ||
-      this.cellAt(x, y)?.plant?.growthLevel == 3
-    ) {
+    const growthLevel = this.cellAt(x, y)?.plant?.growthLevel;
+    if (growthLevel != undefined && growthLevel > 0) {
       return false;
     }
     return true;
