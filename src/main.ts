@@ -37,7 +37,7 @@ serializeButton.addEventListener("click", () => {
 const deserializeButton = document.querySelector("#deserializeButton")!;
 deserializeButton.addEventListener("click", () => {
   deserializeGrid(buffer);
-  updateGame();
+  gameGrid.renderGrid();
 });
 
 // Add event listener for keydown event for movement

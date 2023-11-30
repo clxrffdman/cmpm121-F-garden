@@ -110,7 +110,7 @@ export class GameGrid {
     }
   }
 
-  renderGrid() {
+  public renderGrid() {
     gridContainer.innerHTML = "";
     for (let y = 0; y < this.gridSize; y++) {
       const row = document.createElement("div");
