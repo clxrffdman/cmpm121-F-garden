@@ -207,13 +207,11 @@ function serializeGrid(buffer: ArrayBuffer) {
     for (let x = 0; x < GRID_SIZE; x++) {
       const currCell = gameGrid.cellAt(x, y);
       const window = new Uint8Array(buffer, (y * GRID_SIZE + x) * 3, 3);
+      if (currCell?.plant) {
+        console.log(currCell.plant);
+      }
       serializeCell(currCell!, window);
     }
-  }
-
-  const viewWindow = new Uint8Array(buffer);
-  for (const num of viewWindow) {
-    console.log(num);
   }
 }
 
@@ -223,6 +221,14 @@ function deserializeGrid(buffer: ArrayBuffer) {
       const currCell = gameGrid.cellAt(x, y);
       const window = new Uint8Array(buffer, (y * GRID_SIZE + x) * 3, 3);
       deserializeCell(currCell!, window);
+    }
+  }
+  for (let y = 0; y < GRID_SIZE; y++) {
+    for (let x = 0; x < GRID_SIZE; x++) {
+      const currCell = gameGrid.cellAt(x, y);
+      if (currCell?.plant) {
+        console.log("deserialize: ", currCell.plant);
+      }
     }
   }
 }
