@@ -1,6 +1,6 @@
 import "./style.css";
 import { GameGrid, plantCell } from "./gameGrid";
-import { plantSpeciesArray, makePlant } from "./plant";
+import { makePlant } from "./plant";
 
 const app: HTMLDivElement = document.querySelector("#app")!;
 
@@ -81,34 +81,6 @@ document.addEventListener("keydown", (event) => {
     "y",
     "z",
   ];
-  const letterToPlantMap: { [key: string]: string } = {
-    a: "apple",
-    b: "banana",
-    c: "carrot",
-    d: "daikon",
-    e: "eggplant",
-    f: "fig",
-    g: "grape",
-    h: "horse_raddish",
-    i: "indonesian_lime",
-    j: "jackfruit",
-    k: "kiwi",
-    l: "lemon",
-    m: "maize",
-    n: "nectarine",
-    o: "orange",
-    p: "potato",
-    q: "quince",
-    r: "raddish",
-    s: "squash",
-    t: "tomato",
-    u: "ugni",
-    v: "vanilla",
-    w: "watermelon",
-    x: "xigua",
-    y: "yam",
-    z: "zuccini",
-  };
 
   if (arrowKeys.includes(key)) {
     gameGrid.player.directionInput(key);
@@ -117,7 +89,10 @@ document.addEventListener("keydown", (event) => {
   }
 
   if (plantKeys.includes(key)) {
-    placePlant(letterToPlantMap[key]);
+    const asciiA = "a".charCodeAt(0);
+    const lowercaseLetter = key.toLowerCase();
+    const letterCode = lowercaseLetter.charCodeAt(0);
+    placePlant(letterCode - asciiA);
   }
 
   if (key == " ") {
@@ -137,42 +112,24 @@ function checkWin() {
   }
 }
 
-function placePlant(plant: string) {
-  if (
-    gameGrid != null &&
-    gameGrid.cellAt(
-      gameGrid.player.highlightedX,
-      gameGrid.player.highlightedY,
-    ) &&
-    !gameGrid.cellAt(
-      gameGrid.player.highlightedX,
-      gameGrid.player.highlightedY,
-    )!.plant
-  ) {
-    gameGrid.plantSeeds(
-      gameGrid.player.highlightedX,
-      gameGrid.player.highlightedY,
-      plant,
-    );
+function placePlant(plantSpeciesIndex: number) {
+  const x = gameGrid.player.highlightedX;
+  const y = gameGrid.player.highlightedY;
+  if (gameGrid?.cellAt(x, y) && !gameGrid.cellAt(x, y)!.plant) {
+    const cell = gameGrid.cellAt(x, y);
+    if (cell) {
+      cell.plant = makePlant(plantSpeciesIndex);
+    }
     updateGame();
   }
 }
 
 function harvest() {
-  if (
-    gameGrid != null &&
-    gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
-  ) {
-    if (
-      gameGrid.cellAt(
-        gameGrid.player.highlightedX,
-        gameGrid.player.highlightedY,
-      )?.plant
-    ) {
-      gameGrid.harvestPlant(
-        gameGrid.player.highlightedX,
-        gameGrid.player.highlightedY,
-      );
+  const x = gameGrid.player.highlightedX;
+  const y = gameGrid.player.highlightedY;
+  if (gameGrid != null && gameGrid.cellAt(x, y)) {
+    if (gameGrid.cellAt(x, y)?.plant) {
+      gameGrid.harvestPlant(x, y);
     }
     updateGame();
   }
@@ -181,13 +138,10 @@ function harvest() {
 function serializeCell(cell: plantCell, window: Uint8Array) {
   const currCell = cell;
   const waterLevel = currCell?.waterLevel;
-  let species: number;
-  plantSpeciesArray.indexOf(currCell?.plant?.species?.name!) == -1
-    ? (species = 0)
-    : (species = plantSpeciesArray.indexOf(currCell?.plant?.species?.name!));
+  const speciesIndex = currCell?.plant?.speciesIndex;
   const growthLevel = currCell?.plant?.growthLevel;
   window[0] = waterLevel!;
-  window[1] = species;
+  window[1] = speciesIndex!;
   window[2] = growthLevel!;
 }
 
@@ -197,7 +151,7 @@ function deserializeCell(cell: plantCell, window: Uint8Array) {
   if (window[1] == 0) {
     currCell.plant = undefined;
   } else {
-    currCell.plant = makePlant(plantSpeciesArray[window[1]]);
+    currCell.plant = makePlant(window[1]);
     currCell.plant!.deserialize(window[2]);
   }
 }

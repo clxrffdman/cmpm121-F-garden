@@ -1,4 +1,4 @@
-import { Plant, makePlant } from "./plant";
+import { Plant } from "./plant";
 import { gridContainer } from "./main";
 import { Player } from "./player";
 import luck from "./luck";
@@ -24,13 +24,6 @@ export class GameGrid {
     this.grid = [];
     this.player = new Player(2, 2, this);
     this.initializeGrid();
-  }
-
-  plantSeeds(x: number, y: number, plant: string) {
-    const cell = this.cellAt(x, y);
-    if (cell) {
-      cell.plant = makePlant(plant);
-    }
   }
 
   harvestPlant(x: number, y: number) {

@@ -4,15 +4,26 @@ export interface Crop {
 }
 
 export class Plant {
-  species: plantSpecies;
+  speciesIndex: number;
   growthLevel: number;
-  growthAmount: number;
-  curIcon: string;
-  constructor(species: plantSpecies) {
-    this.species = species;
+
+  constructor(speciesIndex: number) {
+    this.speciesIndex = speciesIndex;
     this.growthLevel = 0;
-    this.curIcon = species.growthStages[0];
-    this.growthAmount = 0;
+  }
+
+  public get curStage(): number {
+    return Math.floor((this.growthLevel / this.species.maxGrowthLevel) * 3);
+  }
+
+  public get curIcon(): string {
+    const icon = this.species.growthStages[this.curStage];
+    console.log(icon);
+    return icon;
+  }
+
+  public get species(): plantSpecies {
+    return plantSpeciesArray[this.speciesIndex];
   }
 
   grow(currWater: number, currSun: number) {
@@ -22,9 +33,6 @@ export class Plant {
       currSun >= this.species.sunRequired
     ) {
       this.growthLevel++;
-      this.growthAmount +=
-        this.species.growthStages.length / (this.species.maxGrowthLevel + 1);
-      this.curIcon = this.species.growthStages[Math.floor(this.growthAmount)];
     }
   }
 
@@ -44,17 +52,14 @@ export class Plant {
 
   deserialize(growthLevel: number) {
     this.growthLevel = growthLevel;
-    this.growthAmount =
-      growthLevel *
-      (this.species.growthStages.length / (this.species.maxGrowthLevel + 1));
-    this.curIcon = this.species.growthStages[Math.floor(this.growthAmount)];
   }
 }
 
-export function makePlant(type: string): Plant | undefined {
-  const species = plantSpeciesMap[type];
+export function makePlant(typeIndex: number): Plant | undefined {
+  //Temporary solution
+  const species = plantSpeciesArray[typeIndex];
   if (species) {
-    return new Plant(species);
+    return new Plant(plantSpeciesArray.indexOf(species));
   }
   return undefined;
 }
@@ -69,8 +74,8 @@ interface plantSpecies {
 }
 
 //{"a": "apple", "b":"banana", "c":"carrot", "d":"daikon", "e":"eggplant", "f":"fig", "g":"grape", "h":"horseraddish", "i":"indonesianlime", "j":"jackfruit", "k":"kiwi", "l":"lemon", "m":"maize", "n":"nectarine", "o":"orange", "p":"potato", "q":"quince", "r":"raddish", "s":"squash", "t":"tomato", "u":"ugni", "v":"vanilla", "w":"watermelon", "x":"xigua", "y":"yam", "z":"zuccini"}
-const plantSpeciesMap: { [key: string]: plantSpecies } = {
-  apple: {
+export const plantSpeciesArray: plantSpecies[] = [
+  {
     name: "apple",
     maxGrowthLevel: 10,
     waterRequired: 8,
@@ -78,7 +83,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 20,
     growthStages: ["_", ".", "a", "A"],
   },
-  banana: {
+  {
     name: "banana",
     maxGrowthLevel: 11,
     waterRequired: 6,
@@ -86,7 +91,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 30,
     growthStages: ["_", ".", "b", "B"],
   },
-  carrot: {
+  {
     name: "carrot",
     maxGrowthLevel: 4,
     waterRequired: 2,
@@ -94,7 +99,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 5,
     growthStages: ["_", ".", "c", "C"],
   },
-  daikon: {
+  {
     name: "daikon",
     maxGrowthLevel: 4,
     waterRequired: 2,
@@ -102,7 +107,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 5,
     growthStages: ["_", ".", "d", "D"],
   },
-  eggplant: {
+  {
     name: "eggplant",
     maxGrowthLevel: 6,
     waterRequired: 4,
@@ -110,7 +115,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 10,
     growthStages: ["_", ".", "e", "E"],
   },
-  fig: {
+  {
     name: "fig",
     maxGrowthLevel: 6,
     waterRequired: 2,
@@ -118,7 +123,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 15,
     growthStages: ["_", ".", "f", "F"],
   },
-  grape: {
+  {
     name: "grape",
     maxGrowthLevel: 6,
     waterRequired: 1,
@@ -126,7 +131,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 10,
     growthStages: ["_", ".", "g", "G"],
   },
-  horse_raddish: {
+  {
     name: "horse_raddish",
     maxGrowthLevel: 4,
     waterRequired: 1,
@@ -134,7 +139,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 5,
     growthStages: ["_", ".", "h", "H"],
   },
-  indonesian_lime: {
+  {
     name: "indonesian_lime",
     maxGrowthLevel: 7,
     waterRequired: 5,
@@ -142,7 +147,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 15,
     growthStages: ["_", ".", "i", "I"],
   },
-  jackfruit: {
+  {
     name: "jackfruit",
     maxGrowthLevel: 6,
     waterRequired: 2,
@@ -150,7 +155,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 10,
     growthStages: ["_", ".", "j", "J"],
   },
-  kiwi: {
+  {
     name: "kiwi",
     maxGrowthLevel: 4,
     waterRequired: 3,
@@ -158,7 +163,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 5,
     growthStages: ["_", ".", "k", "K"],
   },
-  lemon: {
+  {
     name: "lemon",
     maxGrowthLevel: 10,
     waterRequired: 6,
@@ -166,7 +171,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 5,
     growthStages: ["_", ".", "l", "L"],
   },
-  maize: {
+  {
     name: "maize",
     maxGrowthLevel: 6,
     waterRequired: 4,
@@ -174,7 +179,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 10,
     growthStages: ["_", ".", "m", "M"],
   },
-  nectarine: {
+  {
     name: "nectarine",
     maxGrowthLevel: 8,
     waterRequired: 5,
@@ -182,7 +187,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 10,
     growthStages: ["_", ".", "n", "N"],
   },
-  orange: {
+  {
     name: "orange",
     maxGrowthLevel: 10,
     waterRequired: 9,
@@ -190,7 +195,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 30,
     growthStages: ["_", ".", "o", "O"],
   },
-  potato: {
+  {
     name: "potato",
     maxGrowthLevel: 5,
     waterRequired: 1,
@@ -198,7 +203,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 15,
     growthStages: ["_", ".", "p", "P"],
   },
-  quince: {
+  {
     name: "quince",
     maxGrowthLevel: 4,
     waterRequired: 1,
@@ -206,7 +211,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 5,
     growthStages: ["_", ".", "q", "Q"],
   },
-  raddish: {
+  {
     name: "raddish",
     maxGrowthLevel: 5,
     waterRequired: 2,
@@ -214,7 +219,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 10,
     growthStages: ["_", ".", "r", "R"],
   },
-  squash: {
+  {
     name: "squash",
     maxGrowthLevel: 6,
     waterRequired: 6,
@@ -222,7 +227,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 10,
     growthStages: ["_", ".", "s", "S"],
   },
-  tomato: {
+  {
     name: "tomato",
     maxGrowthLevel: 4,
     waterRequired: 2,
@@ -230,7 +235,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 20,
     growthStages: ["_", ".", "t", "T"],
   },
-  ugni: {
+  {
     name: "ugni",
     maxGrowthLevel: 10,
     waterRequired: 10,
@@ -238,7 +243,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 10,
     growthStages: ["_", ".", "u", "U"],
   },
-  vanilla: {
+  {
     name: "vanilla",
     maxGrowthLevel: 14,
     waterRequired: 10,
@@ -246,7 +251,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 40,
     growthStages: ["_", ".", "v", "V"],
   },
-  watermelon: {
+  {
     name: "watermelon",
     maxGrowthLevel: 8,
     waterRequired: 6,
@@ -254,7 +259,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 30,
     growthStages: ["_", ".", "w", "W"],
   },
-  xigua: {
+  {
     name: "xigua",
     maxGrowthLevel: 6,
     waterRequired: 5,
@@ -262,7 +267,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 10,
     growthStages: ["_", ".", "x", "X"],
   },
-  yam: {
+  {
     name: "yam",
     maxGrowthLevel: 5,
     waterRequired: 6,
@@ -270,7 +275,7 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 10,
     growthStages: ["_", ".", "y", "Y"],
   },
-  zuccini: {
+  {
     name: "zuccini",
     maxGrowthLevel: 5,
     waterRequired: 7,
@@ -278,33 +283,4 @@ const plantSpeciesMap: { [key: string]: plantSpecies } = {
     cropValue: 20,
     growthStages: ["_", ".", "z", "Z"],
   },
-};
-
-export const plantSpeciesArray: string[] = [
-  "apple",
-  "banana",
-  "carrot",
-  "daikon",
-  "eggplant",
-  "fig",
-  "grape",
-  "horseraddish",
-  "indonesianlime",
-  "jackfruit",
-  "kiwi",
-  "lemon",
-  "maize",
-  "nectarine",
-  "orange",
-  "potato",
-  "quince",
-  "raddish",
-  "squash",
-  "tomato",
-  "ugni",
-  "vanilla",
-  "watermelon",
-  "xigua",
-  "yam",
-  "zuccini",
 ];
