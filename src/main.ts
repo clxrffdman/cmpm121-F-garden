@@ -4,16 +4,13 @@ import { makePlant } from "./plant";
 
 const app: HTMLDivElement = document.querySelector("#app")!;
 
-const gameName = "121 Group 7 Garden Game - F0";
+const gameName = "121 Group 7 Garden Game";
 document.title = gameName;
-const header = document.createElement("h1");
-header.textContent = gameName;
-app.append(header);
+document.querySelector("#title")!.textContent = gameName;
 
 const sunLevelText = document.createElement("p");
 app.appendChild(sunLevelText);
 export const gridContainer = document.createElement("div");
-// gridContainer.classList.add("grid-container"); //Don't have this yet
 app.appendChild(gridContainer);
 
 function updateSunLevel() {
@@ -27,27 +24,21 @@ updateGame();
 
 const buffer = new ArrayBuffer(GRID_SIZE * GRID_SIZE * 3);
 
-const passTimeButton = document.createElement("button");
-passTimeButton.textContent = "Pass Time";
+const passTimeButton = document.querySelector("#passTimeButton")!;
 passTimeButton.addEventListener("click", () => {
   updateGame();
 });
-app.appendChild(passTimeButton);
 
-const serializeButton = document.createElement("button");
-serializeButton.textContent = "serialize";
+const serializeButton = document.querySelector("#serializeButton")!;
 serializeButton.addEventListener("click", () => {
   serializeGrid(buffer);
 });
-app.appendChild(serializeButton);
 
-const deserializeButton = document.createElement("button");
-deserializeButton.textContent = "deserialize";
+const deserializeButton = document.querySelector("#deserializeButton")!;
 deserializeButton.addEventListener("click", () => {
   deserializeGrid(buffer);
   updateGame();
 });
-app.appendChild(deserializeButton);
 
 // Add event listener for keydown event for movement
 document.addEventListener("keydown", (event) => {
