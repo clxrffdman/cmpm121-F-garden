@@ -1,6 +1,6 @@
 import "./style.css";
-import { GameGrid, plantCell } from "./gameGrid";
-import { makePlant } from "./plant";
+import { GameGrid } from "./gameGrid";
+import { PlantCell } from "./plant";
 
 const app: HTMLDivElement = document.querySelector("#app")!;
 
@@ -106,10 +106,11 @@ function checkWin() {
 function placePlant(plantSpeciesIndex: number) {
   const x = gameGrid.player.highlightedX;
   const y = gameGrid.player.highlightedY;
-  if (gameGrid?.cellAt(x, y) && !gameGrid.cellAt(x, y)!.plant) {
+  if (gameGrid?.cellAt(x, y) && !gameGrid.cellAt(x, y)!.hasPlant()) {
     const cell = gameGrid.cellAt(x, y);
     if (cell) {
-      cell.plant = makePlant(plantSpeciesIndex);
+      cell.speciesIndex = plantSpeciesIndex;
+      cell.growthLevel = 0;
     }
     updateGame();
   }
@@ -118,32 +119,25 @@ function placePlant(plantSpeciesIndex: number) {
 function harvest() {
   const x = gameGrid.player.highlightedX;
   const y = gameGrid.player.highlightedY;
-  if (gameGrid != null && gameGrid.cellAt(x, y)) {
-    if (gameGrid.cellAt(x, y)?.plant) {
-      gameGrid.harvestPlant(x, y);
-    }
-    updateGame();
+  if (gameGrid != null) {
+    gameGrid.harvestPlant(x, y);
   }
+  updateGame();
 }
 
-function serializeCell(cell: plantCell, window: Uint8Array) {
-  const currCell = cell;
-  const waterLevel = currCell?.waterLevel;
-  const speciesIndex = currCell?.plant?.speciesIndex;
-  const growthLevel = currCell?.plant?.growthLevel;
-  window[0] = waterLevel!;
-  window[1] = speciesIndex!;
-  window[2] = growthLevel!;
+function serializeCell(cell: PlantCell, window: Uint8Array) {
+  window[0] = cell?.waterLevel!;
+  window[1] = cell?.speciesIndex!;
+  window[2] = cell?.growthLevel!;
 }
 
-function deserializeCell(cell: plantCell, window: Uint8Array) {
-  const currCell = cell;
-  currCell.waterLevel = window[0];
+function deserializeCell(cell: PlantCell, window: Uint8Array) {
+  cell.waterLevel = window[0];
   if (window[1] == 0) {
-    currCell.plant = undefined;
+    cell.speciesIndex = -1;
   } else {
-    currCell.plant = makePlant(window[1]);
-    currCell.plant!.deserialize(window[2]);
+    cell.speciesIndex = window[1];
+    cell.growthLevel = window[2];
   }
 }
 
@@ -152,8 +146,8 @@ function serializeGrid(buffer: ArrayBuffer) {
     for (let x = 0; x < GRID_SIZE; x++) {
       const currCell = gameGrid.cellAt(x, y);
       const window = new Uint8Array(buffer, (y * GRID_SIZE + x) * 3, 3);
-      if (currCell?.plant) {
-        console.log(currCell.plant);
+      if (currCell?.hasPlant()) {
+        console.log(currCell.hasPlant());
       }
       serializeCell(currCell!, window);
     }
@@ -171,8 +165,8 @@ function deserializeGrid(buffer: ArrayBuffer) {
   for (let y = 0; y < GRID_SIZE; y++) {
     for (let x = 0; x < GRID_SIZE; x++) {
       const currCell = gameGrid.cellAt(x, y);
-      if (currCell?.plant) {
-        console.log("deserialize: ", currCell.plant);
+      if (currCell?.hasPlant()) {
+        console.log("deserialize: ", currCell.speciesIndex);
       }
     }
   }

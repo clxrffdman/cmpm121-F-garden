@@ -1,6 +1,6 @@
 import { GameGrid } from "./gameGrid";
 import { gameGrid } from "./main";
-import { Plant } from "./plant";
+import { PlantCell } from "./plant";
 
 export interface SavedPlayer {
   x: number;
@@ -83,8 +83,11 @@ export class Player {
     gameGrid;
   }
 
-  reap(plant: Plant) {
-    this.money += plant.harvest().value;
+  reap(plant: PlantCell) {
+    const crop = plant.harvest();
+    if (crop) {
+      this.money += crop.value;
+    }
     console.log("player money: ", this.money);
   }
 

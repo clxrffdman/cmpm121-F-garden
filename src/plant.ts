@@ -3,22 +3,47 @@ export interface Crop {
   value: number;
 }
 
-export class Plant {
-  speciesIndex: number;
-  growthLevel: number;
+export class PlantCell {
+  public static numBytes = 3;
 
-  constructor(speciesIndex: number) {
-    this.speciesIndex = speciesIndex;
-    this.growthLevel = 0;
+  // eslint-disable-next-line no-unused-vars
+  constructor(private dataView: DataView) {
+    this.waterLevel = 0;
+    this.speciesIndex = -1;
+    this.growthLevel = -1;
+  }
+
+  get waterLevel(): number {
+    return this.dataView.getUint8(0);
+  }
+  get speciesIndex(): number {
+    return this.dataView.getInt8(1);
+  }
+  get growthLevel(): number {
+    return this.dataView.getInt8(2);
+  }
+
+  set waterLevel(value: number) {
+    this.dataView.setUint8(0, value);
+  }
+  set speciesIndex(value: number) {
+    this.dataView.setInt8(1, value);
+  }
+  set growthLevel(value: number) {
+    this.dataView.setInt8(2, value);
   }
 
   public get curStage(): number {
     return Math.floor((this.growthLevel / this.species.maxGrowthLevel) * 3);
   }
 
+  public hasPlant(): boolean {
+    return this.speciesIndex != -1;
+  }
+
   public get curIcon(): string {
+    if (this.speciesIndex == -1) return " ";
     const icon = this.species.growthStages[this.curStage];
-    console.log(icon);
     return icon;
   }
 
@@ -36,32 +61,27 @@ export class Plant {
     }
   }
 
-  harvest(): Crop {
-    if (this.growthLevel == this.species.maxGrowthLevel) {
-      console.log("harvested: ", this.species.name);
+  harvest(): Crop | null {
+    if (this.hasPlant()) {
+      console.log("Attempting to harvest: ", this.speciesIndex);
+      if (this.growthLevel == this.species.maxGrowthLevel) {
+        console.log("Harvested the " + this.species.name);
+        this.speciesIndex = -1;
+        this.growthLevel = -1;
+        return {
+          type: this.species.name,
+          value: this.species.cropValue,
+        };
+      }
+      this.speciesIndex = -1;
+      this.growthLevel = -1;
       return {
-        type: this.species.name,
-        value: this.species.cropValue,
+        type: "scraps",
+        value: 1,
       };
     }
-    return {
-      type: "scraps",
-      value: 1,
-    };
+    return null;
   }
-
-  deserialize(growthLevel: number) {
-    this.growthLevel = growthLevel;
-  }
-}
-
-export function makePlant(typeIndex: number): Plant | undefined {
-  //Temporary solution
-  const species = plantSpeciesArray[typeIndex];
-  if (species) {
-    return new Plant(plantSpeciesArray.indexOf(species));
-  }
-  return undefined;
 }
 
 interface plantSpecies {

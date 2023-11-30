@@ -1,4 +1,4 @@
-import { Plant } from "./plant";
+import { PlantCell } from "./plant";
 import { gridContainer } from "./main";
 import { Player } from "./player";
 import luck from "./luck";
@@ -6,14 +6,10 @@ import luck from "./luck";
 const NUM_NEIGHBORS_PLANT_CANT_GROW = 4;
 const WATER_SCALE = 1.5;
 
-export interface plantCell {
-  waterLevel: number;
-  plant: Plant | undefined;
-}
-
 export class GameGrid {
   private gridSize: number;
-  private grid: plantCell[];
+  private grid: PlantCell[];
+  private gridBuffer: ArrayBuffer;
   public timeIndex = 0;
   public sunLevel = 0;
   public player: Player;
@@ -22,31 +18,32 @@ export class GameGrid {
   constructor(gridSize: number) {
     this.gridSize = gridSize;
     this.grid = [];
+    this.gridBuffer = new ArrayBuffer(
+      Math.pow(gridSize, 2) * PlantCell.numBytes,
+    );
     this.player = new Player(2, 2, this);
     this.initializeGrid();
   }
 
   harvestPlant(x: number, y: number) {
-    const currPlant = this.cellAt(x, y)?.plant;
+    const currPlant = this.cellAt(x, y);
     if (currPlant) {
       this.player.reap(currPlant);
-      this.cellAt(x, y)!.plant = undefined;
     }
   }
 
   isEmptyCell(x: number, y: number) {
     if (x < 0 || x >= this.gridSize || y < 0 || y >= this.gridSize) {
-      console.log("Out of bounds, ", x, y);
       return false;
     }
-    const growthLevel = this.cellAt(x, y)?.plant?.growthLevel;
+    const growthLevel = this.cellAt(x, y)?.growthLevel;
     if (growthLevel != undefined && growthLevel > 0) {
       return false;
     }
     return true;
   }
 
-  cellAt(x: number, y: number): plantCell | undefined {
+  cellAt(x: number, y: number): PlantCell | undefined {
     if (x < 0 || x >= this.gridSize || y < 0 || y >= this.gridSize)
       return undefined;
     return this.grid[y * this.gridSize + x];
@@ -56,11 +53,11 @@ export class GameGrid {
     for (let i = 0; i < this.gridSize; i++) {
       for (let j = 0; j < this.gridSize; j++) {
         const cell = this.cellAt(i, j);
-        if (cell?.plant) {
+        if (cell != undefined && cell.speciesIndex != -1) {
           const numNeighbors = this.determineNumNeighbors(i, j);
           if (numNeighbors < NUM_NEIGHBORS_PLANT_CANT_GROW)
-            if (cell.plant.growthLevel < cell.plant.species.maxGrowthLevel) {
-              cell.plant!.grow(cell.waterLevel, this.sunLevel);
+            if (cell.growthLevel < cell.species.maxGrowthLevel) {
+              cell!.grow(cell.waterLevel, this.sunLevel);
             }
         }
       }
@@ -72,16 +69,16 @@ export class GameGrid {
 
   determineNumNeighbors(i: number, j: number): number {
     let numNeighbors = 0;
-    if (this.cellAt(i - 1, j)?.plant) {
+    if (this.cellAt(i - 1, j)?.speciesIndex != -1) {
       numNeighbors++;
     }
-    if (this.cellAt(i, j + 1)?.plant) {
+    if (this.cellAt(i, j + 1)?.speciesIndex != -1) {
       numNeighbors++;
     }
-    if (this.cellAt(i + 1, j)?.plant) {
+    if (this.cellAt(i + 1, j)?.speciesIndex != -1) {
       numNeighbors++;
     }
-    if (this.cellAt(i, j - 1)?.plant) {
+    if (this.cellAt(i, j - 1)?.speciesIndex != -1) {
       numNeighbors++;
     }
     return numNeighbors;
@@ -89,7 +86,9 @@ export class GameGrid {
 
   initializeGrid() {
     for (let i = 0; i < Math.pow(this.gridSize, 2); i++) {
-      this.grid.push({ waterLevel: 0, plant: undefined });
+      this.grid.push(
+        new PlantCell(new DataView(this.gridBuffer, i * PlantCell.numBytes)),
+      );
     }
   }
 
@@ -125,7 +124,7 @@ export class GameGrid {
           `background-color: ${color}; width: 30px; height: 30px;`,
         );
 
-        const character = this.cellAt(x, y)?.plant?.curIcon;
+        const character = this.cellAt(x, y)?.curIcon;
         if (character) {
           const characterText = document.createElement("span");
           characterText.setAttribute(
