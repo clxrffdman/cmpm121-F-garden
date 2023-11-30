@@ -33,7 +33,7 @@ export class GameGrid {
     }
   }
 
-  harvestPlant(y: number, x: number) {
+  harvestPlant(x: number, y: number) {
     const currPlant = this.cellAt(x, y)?.plant;
     if (currPlant) {
       this.player.reap(currPlant);

@@ -21,7 +21,7 @@ function updateSunLevel() {
   sunLevelText.textContent = `Sun Level: ${gameGrid.sunLevel}`;
 }
 
-const GRID_SIZE = 26;
+const GRID_SIZE = 16;
 export const gameGrid = new GameGrid(GRID_SIZE);
 updateGame();
 
@@ -162,13 +162,12 @@ function harvest() {
   if (
     gameGrid != null &&
     gameGrid.cellAt(gameGrid.player.highlightedX, gameGrid.player.highlightedY)
-      ?.plant
   ) {
     if (
       gameGrid.cellAt(
         gameGrid.player.highlightedX,
         gameGrid.player.highlightedY,
-      )
+      )?.plant
     ) {
       gameGrid.harvestPlant(
         gameGrid.player.highlightedX,

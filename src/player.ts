@@ -27,8 +27,9 @@ export class Player {
     this.x = x;
     this.y = y;
     this.gameGrid = grid;
-    this.highlightedX = 1;
+    this.highlightedX = 0;
     this.highlightedY = 0;
+    this.directionInput("ArrowRight");
     this.character = ">";
     this.lastInput = "ArrowRight";
     this.money = 0;
