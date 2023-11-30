@@ -53,7 +53,7 @@ export class GameGrid {
     for (let i = 0; i < this.gridSize; i++) {
       for (let j = 0; j < this.gridSize; j++) {
         const cell = this.cellAt(i, j);
-        if (cell != undefined && cell.speciesIndex != -1) {
+        if (cell != undefined && cell.hasPlant()) {
           const numNeighbors = this.determineNumNeighbors(i, j);
           if (numNeighbors < NUM_NEIGHBORS_PLANT_CANT_GROW)
             if (cell.growthLevel < cell.species.maxGrowthLevel) {
@@ -69,16 +69,16 @@ export class GameGrid {
 
   determineNumNeighbors(i: number, j: number): number {
     let numNeighbors = 0;
-    if (this.cellAt(i - 1, j)?.speciesIndex != -1) {
+    if (this.cellAt(i - 1, j)?.hasPlant()) {
       numNeighbors++;
     }
-    if (this.cellAt(i, j + 1)?.speciesIndex != -1) {
+    if (this.cellAt(i, j + 1)?.hasPlant()) {
       numNeighbors++;
     }
-    if (this.cellAt(i + 1, j)?.speciesIndex != -1) {
+    if (this.cellAt(i + 1, j)?.hasPlant()) {
       numNeighbors++;
     }
-    if (this.cellAt(i, j - 1)?.speciesIndex != -1) {
+    if (this.cellAt(i, j - 1)?.hasPlant()) {
       numNeighbors++;
     }
     return numNeighbors;
