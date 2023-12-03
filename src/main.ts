@@ -23,7 +23,7 @@ export const gameGrid = new GameGrid(GRID_SIZE);
 updateGame();
 
 // const buffer = new ArrayBuffer(GRID_SIZE * GRID_SIZE * 3);
-class saveGame {
+class gameStateRecord {
   public playerJson: string;
   public gridBuffer: ArrayBuffer;
 
@@ -38,22 +38,76 @@ class saveGame {
     gameGrid.player = Player.loadFromSerialized(this.playerJson);
   }
 }
-let curSave = new saveGame();
+
+class saveGame {
+  public playerJson: string;
+  public gridBuffer: ArrayBuffer;
+  public undoStateList: gameStateRecord[];
+  public redoStateList: gameStateRecord[];
+
+  constructor() {
+    this.playerJson = JSON.stringify(gameGrid.player);
+    this.gridBuffer = new ArrayBuffer(GRID_SIZE * GRID_SIZE * 3);
+    gameGrid.serializeGrid(this.gridBuffer);
+    this.undoStateList = [...undoStateList];
+    this.redoStateList = [...redoStateList];
+  }
+
+  public loadGame() {
+    gameGrid.deserializeGrid(this.gridBuffer);
+    gameGrid.player = Player.loadFromSerialized(this.playerJson);
+    undoStateList = [...this.undoStateList];
+    redoStateList = [...this.redoStateList];
+  }
+}
+
+let undoStateList: gameStateRecord[] = [];
+let redoStateList: gameStateRecord[] = [];
+let curSaveState: saveGame | null = null;
 
 const passTimeButton = document.querySelector("#passTimeButton")!;
 passTimeButton.addEventListener("click", () => {
   updateGame();
 });
 
-const serializeButton = document.querySelector("#serializeButton")!;
-serializeButton.addEventListener("click", () => {
-  curSave = new saveGame();
+const saveButton = document.querySelector("#saveButton")!;
+saveButton.addEventListener("click", () => {
+  curSaveState = new saveGame();
 });
 
-const deserializeButton = document.querySelector("#deserializeButton")!;
-deserializeButton.addEventListener("click", () => {
-  curSave.loadGame();
-  gameGrid.renderGrid();
+const loadButton = document.querySelector("#loadButton")!;
+loadButton.addEventListener("click", () => {
+  if (curSaveState) {
+    curSaveState.loadGame();
+    gameGrid.renderGrid();
+  }
+});
+
+function addToUndoList() {
+  const curState = new gameStateRecord();
+  undoStateList.push(curState);
+}
+
+const undoButton = document.querySelector("#undoButton")!;
+undoButton.addEventListener("click", () => {
+  if (undoStateList.length == 0) return;
+  redoStateList.push(new gameStateRecord());
+  const newState = undoStateList.pop();
+  if (newState) {
+    newState.loadGame();
+    gameGrid.renderGrid();
+  }
+});
+
+const redoButton = document.querySelector("#redoButton")!;
+redoButton.addEventListener("click", () => {
+  if (redoStateList.length == 0) return;
+  undoStateList.push(new gameStateRecord());
+  const newState = redoStateList.pop();
+  if (newState) {
+    newState.loadGame();
+    gameGrid.renderGrid();
+  }
 });
 
 // Add event listener for keydown event for movement
@@ -120,6 +174,8 @@ function checkWin() {
 }
 
 function placePlant(plantSpeciesIndex: number) {
+  addToUndoList();
+  redoStateList.length = 0;
   const x = gameGrid.player.highlightedX;
   const y = gameGrid.player.highlightedY;
   if (gameGrid?.cellAt(x, y) && !gameGrid.cellAt(x, y)!.hasPlant()) {
@@ -133,6 +189,8 @@ function placePlant(plantSpeciesIndex: number) {
 }
 
 function harvest() {
+  addToUndoList();
+  redoStateList.length = 0;
   const x = gameGrid.player.highlightedX;
   const y = gameGrid.player.highlightedY;
   if (gameGrid != null) {
