@@ -1,6 +1,6 @@
 import "./style.css";
 import { GameGrid } from "./gameGrid";
-import { PlantCell } from "./plant";
+import { Player } from "./player";
 
 const app: HTMLDivElement = document.querySelector("#app")!;
 
@@ -22,7 +22,23 @@ const GRID_SIZE = 16;
 export const gameGrid = new GameGrid(GRID_SIZE);
 updateGame();
 
-const buffer = new ArrayBuffer(GRID_SIZE * GRID_SIZE * 3);
+// const buffer = new ArrayBuffer(GRID_SIZE * GRID_SIZE * 3);
+class saveGame {
+  public playerJson: string;
+  public gridBuffer: ArrayBuffer;
+
+  constructor() {
+    this.playerJson = JSON.stringify(gameGrid.player);
+    this.gridBuffer = new ArrayBuffer(GRID_SIZE * GRID_SIZE * 3);
+    gameGrid.serializeGrid(this.gridBuffer);
+  }
+
+  public loadGame() {
+    gameGrid.deserializeGrid(this.gridBuffer);
+    gameGrid.player = Player.loadFromSerialized(this.playerJson);
+  }
+}
+let curSave = new saveGame();
 
 const passTimeButton = document.querySelector("#passTimeButton")!;
 passTimeButton.addEventListener("click", () => {
@@ -31,12 +47,12 @@ passTimeButton.addEventListener("click", () => {
 
 const serializeButton = document.querySelector("#serializeButton")!;
 serializeButton.addEventListener("click", () => {
-  serializeGrid(buffer);
+  curSave = new saveGame();
 });
 
 const deserializeButton = document.querySelector("#deserializeButton")!;
 deserializeButton.addEventListener("click", () => {
-  deserializeGrid(buffer);
+  curSave.loadGame();
   gameGrid.renderGrid();
 });
 
@@ -123,51 +139,4 @@ function harvest() {
     gameGrid.harvestPlant(x, y);
   }
   updateGame();
-}
-
-function serializeCell(cell: PlantCell, window: Uint8Array) {
-  window[0] = cell?.waterLevel!;
-  window[1] = cell?.speciesIndex!;
-  window[2] = cell?.growthLevel!;
-}
-
-function deserializeCell(cell: PlantCell, window: Uint8Array) {
-  cell.waterLevel = window[0];
-  if (window[1] == 0) {
-    cell.speciesIndex = -1;
-  } else {
-    cell.speciesIndex = window[1];
-    cell.growthLevel = window[2];
-  }
-}
-
-function serializeGrid(buffer: ArrayBuffer) {
-  for (let y = 0; y < GRID_SIZE; y++) {
-    for (let x = 0; x < GRID_SIZE; x++) {
-      const currCell = gameGrid.cellAt(x, y);
-      const window = new Uint8Array(buffer, (y * GRID_SIZE + x) * 3, 3);
-      if (currCell?.hasPlant()) {
-        console.log(currCell.hasPlant());
-      }
-      serializeCell(currCell!, window);
-    }
-  }
-}
-
-function deserializeGrid(buffer: ArrayBuffer) {
-  for (let y = 0; y < GRID_SIZE; y++) {
-    for (let x = 0; x < GRID_SIZE; x++) {
-      const currCell = gameGrid.cellAt(x, y);
-      const window = new Uint8Array(buffer, (y * GRID_SIZE + x) * 3, 3);
-      deserializeCell(currCell!, window);
-    }
-  }
-  for (let y = 0; y < GRID_SIZE; y++) {
-    for (let x = 0; x < GRID_SIZE; x++) {
-      const currCell = gameGrid.cellAt(x, y);
-      if (currCell?.hasPlant()) {
-        console.log("deserialize: ", currCell.speciesIndex);
-      }
-    }
-  }
 }

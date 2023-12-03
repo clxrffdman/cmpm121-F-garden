@@ -21,7 +21,7 @@ export class GameGrid {
     this.gridBuffer = new ArrayBuffer(
       Math.pow(gridSize, 2) * PlantCell.numBytes,
     );
-    this.player = new Player(2, 2, this);
+    this.player = new Player(2, 2);
     this.initializeGrid();
   }
 
@@ -158,6 +158,53 @@ export class GameGrid {
       }
 
       gridContainer.appendChild(row);
+    }
+  }
+
+  private serializeCell(cell: PlantCell, window: Uint8Array) {
+    window[0] = cell?.waterLevel!;
+    window[1] = cell?.speciesIndex!;
+    window[2] = cell?.growthLevel!;
+  }
+
+  private deserializeCell(cell: PlantCell, window: Uint8Array) {
+    cell.waterLevel = window[0];
+    if (window[1] == 0) {
+      cell.speciesIndex = -1;
+    } else {
+      cell.speciesIndex = window[1];
+      cell.growthLevel = window[2];
+    }
+  }
+
+  public serializeGrid(buffer: ArrayBuffer) {
+    for (let y = 0; y < this.gridSize; y++) {
+      for (let x = 0; x < this.gridSize; x++) {
+        const currCell = this.cellAt(x, y);
+        const window = new Uint8Array(buffer, (y * this.gridSize + x) * 3, 3);
+        if (currCell?.hasPlant()) {
+          console.log(currCell.hasPlant());
+        }
+        this.serializeCell(currCell!, window);
+      }
+    }
+  }
+
+  public deserializeGrid(buffer: ArrayBuffer) {
+    for (let y = 0; y < this.gridSize; y++) {
+      for (let x = 0; x < this.gridSize; x++) {
+        const currCell = this.cellAt(x, y);
+        const window = new Uint8Array(buffer, (y * this.gridSize + x) * 3, 3);
+        this.deserializeCell(currCell!, window);
+      }
+    }
+    for (let y = 0; y < this.gridSize; y++) {
+      for (let x = 0; x < this.gridSize; x++) {
+        const currCell = this.cellAt(x, y);
+        if (currCell?.hasPlant()) {
+          console.log("deserialize: ", currCell.speciesIndex);
+        }
+      }
     }
   }
 }

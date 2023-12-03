@@ -1,4 +1,3 @@
-import { GameGrid } from "./gameGrid";
 import { gameGrid } from "./main";
 import { PlantCell } from "./plant";
 
@@ -17,22 +16,22 @@ export class Player {
   public money: number;
   public x: number;
   public y: number;
-  private gameGrid: GameGrid;
-  public highlightedX: number; //maybe don't do highlight in player, do it in plant (from TA)
+  public highlightedX: number;
   public highlightedY: number;
-  public character: string;
   public lastInput: string;
 
-  constructor(x: number, y: number, grid: GameGrid) {
+  constructor(x: number, y: number) {
     this.x = x;
     this.y = y;
-    this.gameGrid = grid;
-    this.highlightedX = 0;
-    this.highlightedY = 0;
+    this.highlightedX = x + 1;
+    this.highlightedY = y;
     this.directionInput("ArrowRight");
-    this.character = ">";
     this.lastInput = "ArrowRight";
     this.money = 0;
+  }
+
+  public get character(): string {
+    return dirData[this.lastInput][0];
   }
 
   move(dir: string) {
@@ -43,7 +42,7 @@ export class Player {
     else if (dir == "ArrowLeft") newX--;
     else if (dir == "ArrowRight") newX++;
 
-    if (this.gameGrid.isEmptyCell(newX, newY)) {
+    if (gameGrid.isEmptyCell(newX, newY)) {
       this.x = newX;
       this.y = newY;
       this.changePlayerOrientation(dir);
@@ -56,10 +55,7 @@ export class Player {
       this.changePlayerOrientation(dir);
       return;
     }
-    const isValid = this.gameGrid.isEmptyCell(
-      this.highlightedX,
-      this.highlightedY,
-    );
+    const isValid = gameGrid.isEmptyCell(this.highlightedX, this.highlightedY);
     if (isValid) {
       this.move(dir);
     }
@@ -67,14 +63,6 @@ export class Player {
 
   changePlayerOrientation(key: string) {
     this.lastInput = key;
-    const dirData: { [k: string]: [string, [number, number]] } = {
-      //In the format "key: [Character, [x, y]]"
-      ArrowUp: ["^", [0, -1]],
-      ArrowDown: ["v", [0, 1]],
-      ArrowLeft: ["<", [-1, 0]],
-      ArrowRight: [">", [1, 0]],
-    };
-    this.character = dirData[key][0];
     this.highlightedX = this.x + dirData[key][1][0];
     this.highlightedY = this.y + dirData[key][1][1];
   }
@@ -92,7 +80,7 @@ export class Player {
   }
 
   setPosition(newX: number, newY: number) {
-    if (this.gameGrid.isEmptyCell(newX, newY)) {
+    if (gameGrid.isEmptyCell(newX, newY)) {
       this.x = newX;
       this.y = newY;
       this.renderPlayer();
@@ -111,22 +99,22 @@ export class Player {
     return serializedPlayerString;
   }
 
-  loadFromSerialized(json: string) {
+  static loadFromSerialized(json: string) {
     const p: SavedPlayer = JSON.parse(json);
-    this.x = p.x;
-    this.y = p.y;
-    this.lastInput = p.lastInput;
-    const dirData: { [k: string]: [string, [number, number]] } = {
-      //In the format "key: [Character, [x, y]]"
-      ArrowUp: ["^", [0, -1]],
-      ArrowDown: ["v", [0, 1]],
-      ArrowLeft: ["<", [-1, 0]],
-      ArrowRight: [">", [1, 0]],
-    };
-    this.character = dirData[this.lastInput][0];
-    this.highlightedX = this.x + dirData[this.lastInput][1][0];
-    this.highlightedY = this.y + dirData[this.lastInput][1][1];
-    this.money = p.money;
-    this.gameGrid.renderGrid();
+
+    const player = new Player(p.x, p.y);
+    player.lastInput = p.lastInput;
+    player.highlightedX = player.x + dirData[player.lastInput][1][0];
+    player.highlightedY = player.y + dirData[player.lastInput][1][1];
+    player.money = p.money;
+    return player;
   }
 }
+
+const dirData: { [k: string]: [string, [number, number]] } = {
+  //In the format "key: [Character, [x, y]]"
+  ArrowUp: ["^", [0, -1]],
+  ArrowDown: ["v", [0, 1]],
+  ArrowLeft: ["<", [-1, 0]],
+  ArrowRight: [">", [1, 0]],
+};
