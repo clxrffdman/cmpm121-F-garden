@@ -2,17 +2,13 @@ import "./style.css";
 import { GameGrid } from "./gameGrid";
 import { Player } from "./player";
 
-const app: HTMLDivElement = document.querySelector("#app")!;
-
 const gameName = "121 Group 7 Garden Game";
 document.title = gameName;
 document.querySelector("#title")!.textContent = gameName;
 
-const sunLevelText = document.createElement("p");
-app.appendChild(sunLevelText);
-export const gridContainer = document.createElement("div");
-app.appendChild(gridContainer);
+export const gridContainer = document.querySelector("#game")!;
 
+const sunLevelText = document.querySelector("#sunLevelText")!;
 function updateSunLevel() {
   gameGrid.sunLevel = Math.floor(Math.random() * 4);
   sunLevelText.textContent = `Sun Level: ${gameGrid.sunLevel}`;
@@ -22,7 +18,6 @@ const GRID_SIZE = 16;
 export const gameGrid = new GameGrid(GRID_SIZE);
 updateGame();
 
-// const buffer = new ArrayBuffer(GRID_SIZE * GRID_SIZE * 3);
 class gameStateRecord {
   public playerJson: string;
   public gridBuffer: ArrayBuffer;
