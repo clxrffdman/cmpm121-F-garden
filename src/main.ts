@@ -79,8 +79,14 @@ if (localAutoSave) {
     "It looks like you have previous save data, do you want to continue from it?",
   );
   if (help) {
-    //localAutoSave.loadGame();
-    gameGrid.renderGrid();
+    const dude: saveGame = JSON.parse(localAutoSave) as saveGame;
+    const dude2 = new saveGame;
+    dude2.playerJson = dude.playerJson;
+    //dude2.gridBuffer = dude.gridBuffer;
+    if (dude2) {
+      dude2.loadGame();
+      gameGrid.renderGrid();
+    }
   }
 }
 
