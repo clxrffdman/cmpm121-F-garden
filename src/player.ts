@@ -95,7 +95,6 @@ export class Player {
       lastInput: this.lastInput,
     };
     const serializedPlayerString = JSON.stringify(serializedPlayerState);
-    console.log(serializedPlayerString);
     return serializedPlayerString;
   }
 

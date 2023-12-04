@@ -20,36 +20,48 @@ updateGame();
 
 class gameStateRecord {
   public playerJson: string;
-  public gridBuffer: ArrayBuffer;
+  public gridBuffer: string;
 
   constructor() {
     this.playerJson = JSON.stringify(gameGrid.player);
-    this.gridBuffer = new ArrayBuffer(GRID_SIZE * GRID_SIZE * 3);
-    gameGrid.serializeGrid(this.gridBuffer);
+    const newBuff = new ArrayBuffer(GRID_SIZE * GRID_SIZE * 3);
+    gameGrid.serializeGrid(newBuff);
+    const enc = new TextDecoder("utf-8");
+    this.gridBuffer = enc.decode(newBuff);
   }
 
   public loadGame() {
-    gameGrid.deserializeGrid(this.gridBuffer);
+    const enc = new TextEncoder();
+    const newBuff = enc.encode(this.gridBuffer).buffer;
+
+    gameGrid.deserializeGrid(newBuff);
     gameGrid.player = Player.loadFromSerialized(this.playerJson);
   }
 }
 
 class saveGame {
   public playerJson: string;
-  public gridBuffer: ArrayBuffer;
+  public gridBuffer: string;
   public undoStateList: gameStateRecord[];
   public redoStateList: gameStateRecord[];
 
   constructor() {
     this.playerJson = JSON.stringify(gameGrid.player);
-    this.gridBuffer = new ArrayBuffer(GRID_SIZE * GRID_SIZE * 3);
-    gameGrid.serializeGrid(this.gridBuffer);
+    const newBuff = new ArrayBuffer(GRID_SIZE * GRID_SIZE * 3);
+    gameGrid.serializeGrid(newBuff);
+    const enc = new TextDecoder("utf-8");
+    this.gridBuffer = enc.decode(newBuff);
     this.undoStateList = [...undoStateList];
     this.redoStateList = [...redoStateList];
   }
 
   public loadGame() {
-    gameGrid.deserializeGrid(this.gridBuffer);
+
+    console.log("loading");
+    const enc = new TextEncoder();
+
+    console.log(gameGrid);
+    gameGrid.deserializeGrid(enc.encode(this.gridBuffer).buffer);
     gameGrid.player = Player.loadFromSerialized(this.playerJson);
     undoStateList = [...this.undoStateList];
     redoStateList = [...this.redoStateList];
@@ -82,13 +94,23 @@ if (localAutoSave) {
     const dude: saveGame = JSON.parse(localAutoSave) as saveGame;
     const dude2 = new saveGame();
     dude2.playerJson = dude.playerJson;
-    //dude2.gridBuffer = dude.gridBuffer;
-    if (dude2) {
-      dude2.loadGame();
-      gameGrid.renderGrid();
-    }
+    dude2.gridBuffer = dude.gridBuffer;
+    dude2.redoStateList = dude.redoStateList;
+    dude2.undoStateList = dude.undoStateList;
+    dude2.loadGame();
+    gameGrid.renderGrid();
   }
 }
+
+
+const resetButton = document.querySelector("#reset")!;
+resetButton.addEventListener("click", () => {
+  const reset = confirm("Reset All Data?");
+  if (reset) {
+    localStorage.clear();
+    location.reload();
+  }
+});
 
 const saveButton1 = document.querySelector("#saveButton1")!;
 saveButton1.addEventListener("click", () => {

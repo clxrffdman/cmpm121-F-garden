@@ -198,13 +198,5 @@ export class GameGrid {
         this.deserializeCell(currCell!, window);
       }
     }
-    for (let y = 0; y < this.gridSize; y++) {
-      for (let x = 0; x < this.gridSize; x++) {
-        const currCell = this.cellAt(x, y);
-        if (currCell?.hasPlant()) {
-          console.log("deserialize: ", currCell.speciesIndex);
-        }
-      }
-    }
   }
 }

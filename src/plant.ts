@@ -43,7 +43,7 @@ export class PlantCell {
 
   public get curIcon(): string {
     if (this.speciesIndex == -1) return " ";
-    const icon = this.species.growthStages[this.curStage];
+    const icon = plantSpeciesArray[this.speciesIndex].growthStages[0];
     return icon;
   }
 
