@@ -27,7 +27,11 @@ export class PlantCell {
     this.dataView.setUint8(0, value);
   }
   set speciesIndex(value: number) {
+    if(value > 0 ){
     this.dataView.setInt8(1, value);
+    } else {
+      console.log("-plant");
+    }
   }
   set growthLevel(value: number) {
     this.dataView.setInt8(2, value);
@@ -38,11 +42,12 @@ export class PlantCell {
   }
 
   public hasPlant(): boolean {
-    return this.speciesIndex != -1;
+    return this.speciesIndex > 0;
   }
 
   public get curIcon(): string {
-    if (this.speciesIndex == -1) return " ";
+    if (this.speciesIndex <= 0) return " ";
+    console.log("SpeciesIndex: ",this.speciesIndex);
     const icon = plantSpeciesArray[this.speciesIndex].growthStages[0];
     return icon;
   }
