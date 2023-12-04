@@ -64,8 +64,12 @@ export class PlantCell {
   harvest(): Crop | null {
     if (this.hasPlant()) {
       console.log("Attempting to harvest: ", this.speciesIndex);
-      if (this.growthLevel == plantSpeciesArray[this.speciesIndex].maxGrowthLevel) {
-        console.log("Harvested the " + plantSpeciesArray[this.speciesIndex].name);
+      if (
+        this.growthLevel == plantSpeciesArray[this.speciesIndex].maxGrowthLevel
+      ) {
+        console.log(
+          "Harvested the " + plantSpeciesArray[this.speciesIndex].name,
+        );
         const currPlant = plantSpeciesArray[this.speciesIndex];
         this.speciesIndex = -1;
         this.growthLevel = -1;
