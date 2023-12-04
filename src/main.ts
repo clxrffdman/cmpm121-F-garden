@@ -56,7 +56,6 @@ class saveGame {
   }
 
   public loadGame() {
-
     console.log("loading");
     const enc = new TextEncoder();
 
@@ -101,7 +100,6 @@ if (localAutoSave) {
     gameGrid.renderGrid();
   }
 }
-
 
 const resetButton = document.querySelector("#reset")!;
 resetButton.addEventListener("click", () => {
