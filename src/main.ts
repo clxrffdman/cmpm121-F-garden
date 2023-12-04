@@ -80,7 +80,7 @@ if (localAutoSave) {
   );
   if (help) {
     const dude: saveGame = JSON.parse(localAutoSave) as saveGame;
-    const dude2 = new saveGame;
+    const dude2 = new saveGame();
     dude2.playerJson = dude.playerJson;
     //dude2.gridBuffer = dude.gridBuffer;
     if (dude2) {
