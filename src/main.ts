@@ -75,7 +75,9 @@ setInterval(function () {
 const localAutoSave = localStorage.getItem("autoSave");
 
 if (localAutoSave) {
-  const help = confirm("It looks like you have previous save data, do you want to continue from it?");
+  const help = confirm(
+    "It looks like you have previous save data, do you want to continue from it?",
+  );
   if (help) {
     //localAutoSave.loadGame();
     gameGrid.renderGrid();
