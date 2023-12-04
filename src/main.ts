@@ -58,22 +58,60 @@ class saveGame {
 
 let undoStateList: gameStateRecord[] = [];
 let redoStateList: gameStateRecord[] = [];
-let curSaveState: saveGame | null = null;
+let curSaveState1: saveGame | null = null;
+let curSaveState2: saveGame | null = null;
+let autoSaveState: saveGame | null = null;
 
 const passTimeButton = document.querySelector("#passTimeButton")!;
 passTimeButton.addEventListener("click", () => {
   updateGame();
 });
 
-const saveButton = document.querySelector("#saveButton")!;
-saveButton.addEventListener("click", () => {
-  curSaveState = new saveGame();
+setInterval(function () {
+  autoSaveState = new saveGame();
+  localStorage.setItem("autoSave", JSON.stringify(autoSaveState));
+}, 5 * 1000);
+
+const localAutoSave = localStorage.getItem("autoSave");
+
+if (localAutoSave) {
+  const help = confirm("It looks like you have previous save data, do you want to continue from it?");
+  if (help) {
+    //localAutoSave.loadGame();
+    gameGrid.renderGrid();
+  }
+}
+
+const saveButton1 = document.querySelector("#saveButton1")!;
+saveButton1.addEventListener("click", () => {
+  curSaveState1 = new saveGame();
 });
 
-const loadButton = document.querySelector("#loadButton")!;
-loadButton.addEventListener("click", () => {
-  if (curSaveState) {
-    curSaveState.loadGame();
+const loadButton1 = document.querySelector("#loadButton1")!;
+loadButton1.addEventListener("click", () => {
+  if (curSaveState1) {
+    curSaveState1.loadGame();
+    gameGrid.renderGrid();
+  }
+});
+
+const saveButton2 = document.querySelector("#saveButton2")!;
+saveButton2.addEventListener("click", () => {
+  curSaveState2 = new saveGame();
+});
+
+const loadButton2 = document.querySelector("#loadButton2")!;
+loadButton2.addEventListener("click", () => {
+  if (curSaveState2) {
+    curSaveState2.loadGame();
+    gameGrid.renderGrid();
+  }
+});
+
+const loadAutoSaveButton = document.querySelector("#loadAutoSaveButton")!;
+loadAutoSaveButton.addEventListener("click", () => {
+  if (autoSaveState) {
+    autoSaveState.loadGame();
     gameGrid.renderGrid();
   }
 });
