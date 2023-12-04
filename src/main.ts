@@ -14,7 +14,7 @@ function updateSunLevel() {
   sunLevelText.textContent = `Sun Level: ${gameGrid.sunLevel}`;
 }
 
-const GRID_SIZE = 16;
+const GRID_SIZE = 4;
 export const gameGrid = new GameGrid(GRID_SIZE);
 updateGame();
 
@@ -23,11 +23,16 @@ class gameStateRecord {
   public gridBuffer: string;
 
   constructor() {
+    console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
     this.playerJson = JSON.stringify(gameGrid.player);
     const newBuff = new ArrayBuffer(GRID_SIZE * GRID_SIZE * 3);
     gameGrid.serializeGrid(newBuff);
-    const enc = new TextDecoder("utf-8");
-    this.gridBuffer = enc.decode(newBuff);
+    const dec = new TextDecoder("utf-8");
+
+    this.gridBuffer = dec.decode(newBuff);
+    console.log("Decoding Buffer in gameStateRecord");
+    console.log(this.gridBuffer);
+    console.log(this.playerJson);
   }
 
   public loadGame() {
@@ -49,18 +54,35 @@ class saveGame {
     this.playerJson = JSON.stringify(gameGrid.player);
     const newBuff = new ArrayBuffer(GRID_SIZE * GRID_SIZE * 3);
     gameGrid.serializeGrid(newBuff);
-    const enc = new TextDecoder("utf-8");
-    this.gridBuffer = enc.decode(newBuff);
+
+    // const enc = new TextDecoder("utf-8");
+    // const window = new Uint8Array(newBuff, 0, newBuff.byteLength);
+    // this.gridBuffer = enc.decode(window);
+
+    const bytes = new Int8Array(newBuff);
+    this.gridBuffer = bytes.reduce(
+      (str, byte) => str + String.fromCharCode(byte),
+      "",
+    );
+
+    console.log("Decoding Buffer in SaveGame");
+    console.log(this.gridBuffer);
+    console.log(this.playerJson);
     this.undoStateList = [...undoStateList];
     this.redoStateList = [...redoStateList];
   }
 
   public loadGame() {
     console.log("loading");
-    const enc = new TextEncoder();
+    // const enc = new TextEncoder();
 
     console.log(gameGrid);
-    gameGrid.deserializeGrid(enc.encode(this.gridBuffer).buffer);
+    // gameGrid.deserializeGrid(enc.encode(this.gridBuffer).buffer);
+    gameGrid.deserializeGrid(
+      Int8Array.from(Array(this.gridBuffer.length), (_, i) =>
+        this.gridBuffer.charCodeAt(i),
+      ),
+    );
     gameGrid.player = Player.loadFromSerialized(this.playerJson);
     undoStateList = [...this.undoStateList];
     redoStateList = [...this.redoStateList];
