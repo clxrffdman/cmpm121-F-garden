@@ -55,15 +55,7 @@ class saveGame {
     const newBuff = new ArrayBuffer(GRID_SIZE * GRID_SIZE * 3);
     gameGrid.serializeGrid(newBuff);
 
-    // const enc = new TextDecoder("utf-8");
-    // const window = new Uint8Array(newBuff, 0, newBuff.byteLength);
-    // this.gridBuffer = enc.decode(window);
-
-    const bytes = new Int8Array(newBuff);
-    this.gridBuffer = bytes.reduce(
-      (str, byte) => str + String.fromCharCode(byte),
-      "",
-    );
+    this.gridBuffer = _arrayBufferToBase64(newBuff);
 
     console.log("Decoding Buffer in SaveGame");
     console.log(this.gridBuffer);
@@ -74,19 +66,33 @@ class saveGame {
 
   public loadGame() {
     console.log("loading");
-    // const enc = new TextEncoder();
 
     console.log(gameGrid);
-    // gameGrid.deserializeGrid(enc.encode(this.gridBuffer).buffer);
-    gameGrid.deserializeGrid(
-      Int8Array.from(Array(this.gridBuffer.length), (_, i) =>
-        this.gridBuffer.charCodeAt(i),
-      ),
-    );
+    gameGrid.deserializeGrid(_base64ToArrayBuffer(this.gridBuffer));
     gameGrid.player = Player.loadFromSerialized(this.playerJson);
     undoStateList = [...this.undoStateList];
     redoStateList = [...this.redoStateList];
   }
+}
+
+function _arrayBufferToBase64(buffer: ArrayBuffer) {
+  const base64 = btoa(
+    new Uint8Array(buffer).reduce(
+      (data, byte) => data + String.fromCharCode(byte),
+      "",
+    ),
+  );
+  return base64;
+}
+
+function _base64ToArrayBuffer(base64: string) {
+  const binaryString = atob(base64);
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  return bytes.buffer;
 }
 
 let undoStateList: gameStateRecord[] = [];
