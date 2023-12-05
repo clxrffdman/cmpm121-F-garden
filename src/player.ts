@@ -9,10 +9,6 @@ export interface SavedPlayer {
 }
 
 export class Player {
-  /*TODO:
-    - Interaction
-    - Inventory (later)
-    */
   public money: number;
   public x: number;
   public y: number;

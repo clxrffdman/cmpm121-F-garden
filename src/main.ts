@@ -14,7 +14,7 @@ function updateSunLevel() {
   sunLevelText.textContent = `Sun Level: ${gameGrid.sunLevel}`;
 }
 
-const GRID_SIZE = 4;
+const GRID_SIZE = 16;
 export const gameGrid = new GameGrid(GRID_SIZE);
 updateGame();
 
@@ -51,22 +51,17 @@ class saveGame {
 
     this.gridBuffer = _arrayBufferToBase64(newBuff);
 
-    console.log("Decoding Buffer in SaveGame");
-    console.log(this.gridBuffer);
-    console.log(this.playerJson);
+    console.log("Saving");
     this.undoStateList = [...undoStateList];
     this.redoStateList = [...redoStateList];
   }
 
   public loadGame() {
-    console.log("loading");
-
-    console.log(gameGrid);
+    console.log("Loading");
     gameGrid.deserializeGrid(_base64ToArrayBuffer(this.gridBuffer));
     gameGrid.player = Player.loadFromSerialized(this.playerJson);
     undoStateList = [...this.undoStateList];
     redoStateList = [...this.redoStateList];
-
     gameGrid.renderGrid();
   }
 }
