@@ -27,42 +27,41 @@ export class PlantCell {
     this.dataView.setUint8(0, value);
   }
   set speciesIndex(value: number) {
-    if (value > 0) {
-      this.dataView.setInt8(1, value);
-    } else {
-      console.log("-plant");
-    }
+    this.dataView.setInt8(1, value);
   }
   set growthLevel(value: number) {
     this.dataView.setInt8(2, value);
   }
 
   public get curStage(): number {
-    return Math.floor((this.growthLevel / this.species.maxGrowthLevel) * 3);
+    if (!this.hasPlant()) return -1;
+    return Math.floor((this.growthLevel / this.species!.maxGrowthLevel) * 3);
   }
 
   public hasPlant(): boolean {
-    return this.speciesIndex > 0;
+    return this.speciesIndex != -1;
   }
 
   public get curIcon(): string {
-    if (this.speciesIndex <= 0) return " ";
-    console.log("SpeciesIndex: ", this.speciesIndex);
-    const icon = plantSpeciesArray[this.speciesIndex].growthStages[0];
+    if (!this.hasPlant()) return " ";
+    const icon =
+      plantSpeciesArray[this.speciesIndex].growthStages[this.curStage];
     return icon;
   }
 
-  public get species(): plantSpecies {
+  public get species(): plantSpecies | null {
+    if (!this.hasPlant()) return null;
     return plantSpeciesArray[this.speciesIndex];
   }
 
   grow(currWater: number, currSun: number) {
-    if (
-      this.growthLevel < this.species.maxGrowthLevel &&
-      currWater >= this.species.waterRequired &&
-      currSun >= this.species.sunRequired
-    ) {
-      this.growthLevel++;
+    if (this.hasPlant()) {
+      const levelReq = this.growthLevel < this.species!.maxGrowthLevel;
+      const waterReq = currWater >= this.species!.waterRequired;
+      const sunReq = currSun >= this.species!.sunRequired;
+      if (levelReq && waterReq && sunReq) {
+        this.growthLevel++;
+      }
     }
   }
 

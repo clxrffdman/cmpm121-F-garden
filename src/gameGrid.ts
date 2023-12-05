@@ -56,7 +56,7 @@ export class GameGrid {
         if (cell != undefined && cell.hasPlant()) {
           const numNeighbors = this.determineNumNeighbors(i, j);
           if (numNeighbors < NUM_NEIGHBORS_PLANT_CANT_GROW)
-            if (cell.growthLevel < cell.species.maxGrowthLevel) {
+            if (cell.growthLevel < cell.species!.maxGrowthLevel) {
               cell!.grow(cell.waterLevel, this.sunLevel);
             }
         }
@@ -183,7 +183,7 @@ export class GameGrid {
         const currCell = this.cellAt(x, y);
         const window = new Int8Array(buffer, (y * this.gridSize + x) * 3, 3);
         if (currCell?.hasPlant()) {
-          console.log(currCell.hasPlant());
+          console.log("-----" + currCell.hasPlant());
         }
         this.serializeCell(currCell!, window);
       }
