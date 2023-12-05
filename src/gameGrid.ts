@@ -5,6 +5,7 @@ import luck from "./luck";
 
 const NUM_NEIGHBORS_PLANT_CANT_GROW = 4;
 const WATER_SCALE = 1.5;
+const MAX_WATER_LEVEL = 10;
 
 export class GameGrid {
   private gridSize: number;
@@ -13,7 +14,6 @@ export class GameGrid {
   public timeIndex = 0;
   public sunLevel = 0;
   public player: Player;
-  maxWaterLevel = 10;
 
   constructor(gridSize: number) {
     this.gridSize = gridSize;
@@ -68,18 +68,17 @@ export class GameGrid {
   }
 
   determineNumNeighbors(i: number, j: number): number {
+    const DIRECTIONS = [
+      { dx: -1, dy: 0 },
+      { dx: 1, dy: 0 },
+      { dx: 0, dy: -1 },
+      { dx: 0, dy: 1 },
+    ];
     let numNeighbors = 0;
-    if (this.cellAt(i - 1, j)?.hasPlant()) {
-      numNeighbors++;
-    }
-    if (this.cellAt(i, j + 1)?.hasPlant()) {
-      numNeighbors++;
-    }
-    if (this.cellAt(i + 1, j)?.hasPlant()) {
-      numNeighbors++;
-    }
-    if (this.cellAt(i, j - 1)?.hasPlant()) {
-      numNeighbors++;
+    for (const { dx, dy } of DIRECTIONS) {
+      if (this.cellAt(i + dx, j + dy)?.hasPlant()) {
+        numNeighbors++;
+      }
     }
     return numNeighbors;
   }
@@ -101,9 +100,8 @@ export class GameGrid {
           luck(this.timeIndex.toString() + i.toString() + j.toString()) *
             WATER_SCALE,
         );
-        if (waterLevel > this.maxWaterLevel) {
-          waterLevel = this.maxWaterLevel;
-        }
+        waterLevel =
+          waterLevel > MAX_WATER_LEVEL ? MAX_WATER_LEVEL : waterLevel;
         this.cellAt(i, j)!.waterLevel = waterLevel;
       }
     }
@@ -113,34 +111,26 @@ export class GameGrid {
     gridContainer.innerHTML = "";
     for (let y = 0; y < this.gridSize; y++) {
       const row = document.createElement("div");
-      row.setAttribute("style", "display: flex; flex-direction: row;");
+      row.classList.add("row");
 
       for (let x = 0; x < this.gridSize; x++) {
         const cell = document.createElement("div");
+        cell.classList.add("cell");
         const waterLevel = this.cellAt(x, y)!.waterLevel;
         const color = `hsl(${30 + waterLevel * 7}, 50%, 50%)`;
-        cell.setAttribute(
-          "style",
-          `background-color: ${color}; width: 30px; height: 30px;`,
-        );
+        cell.style.backgroundColor = color;
 
         const character = this.cellAt(x, y)?.curIcon;
         if (character) {
           const characterText = document.createElement("span");
-          characterText.setAttribute(
-            "style",
-            "font-size: 14px; align-self: center;",
-          );
+          characterText.classList.add("character");
           characterText.textContent = character;
           cell.appendChild(characterText);
         }
 
         if (this.player.x == x && this.player.y == y) {
           const playerText = document.createElement("span");
-          playerText.setAttribute(
-            "style",
-            "font-size: 14px; align-self: center;",
-          );
+          playerText.classList.add("character");
           playerText.textContent = this.player.character;
           cell.appendChild(playerText);
         }
@@ -178,15 +168,12 @@ export class GameGrid {
   }
 
   public serializeGrid(buffer: ArrayBuffer) {
-    for (let y = 0; y < this.gridSize; y++) {
-      for (let x = 0; x < this.gridSize; x++) {
-        const currCell = this.cellAt(x, y);
-        const window = new Int8Array(buffer, (y * this.gridSize + x) * 3, 3);
-        if (currCell?.hasPlant()) {
-          console.log("-----" + currCell.hasPlant());
-        }
-        this.serializeCell(currCell!, window);
-      }
+    const gridBuffer = new Int8Array(this.gridBuffer);
+    const windowSize = 3;
+    for (let i = 0; i < gridBuffer.length; i += windowSize) {
+      const currCell = this.grid[Math.floor(i / windowSize)];
+      const window = new Int8Array(buffer, i, windowSize);
+      this.serializeCell(currCell, window);
     }
   }
 

@@ -1,0 +1,14 @@
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.cell {
+    width: 30px;
+    height: 30px;
+}
+
+.character {
+    font-size: 14px;
+    align-self: center;
+}

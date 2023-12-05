@@ -23,21 +23,15 @@ class gameStateRecord {
   public gridBuffer: string;
 
   constructor() {
-    console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
     this.playerJson = JSON.stringify(gameGrid.player);
     const newBuff = new ArrayBuffer(GRID_SIZE * GRID_SIZE * 3);
     gameGrid.serializeGrid(newBuff);
-    const dec = new TextDecoder("utf-8");
 
-    this.gridBuffer = dec.decode(newBuff);
-    console.log("Decoding Buffer in gameStateRecord");
-    console.log(this.gridBuffer);
-    console.log(this.playerJson);
+    this.gridBuffer = _arrayBufferToBase64(newBuff);
   }
 
   public loadGame() {
-    const enc = new TextEncoder();
-    const newBuff = enc.encode(this.gridBuffer).buffer;
+    const newBuff = _base64ToArrayBuffer(this.gridBuffer);
 
     gameGrid.deserializeGrid(newBuff);
     gameGrid.player = Player.loadFromSerialized(this.playerJson);
