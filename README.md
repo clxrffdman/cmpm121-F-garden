@@ -88,12 +88,12 @@ Looking back on how you achieved the F0 requirements, how has your team’s plan
 ### F1 Requirements
 
 - [F1.a] A play scenario is completed when some condition is satisfied (e.g. at least X plants at growth level Y or above).
-  -
+  - PH
 - [F1.b] The player must be able to undo every major choice (all the way back to the start of play), even from a saved game. They should be able to redo (undo of undo operations) multiple times.
-  -
+  - PH
 - [F1.c] The player must be able to manually save their progress in the game in a way that allows them to load that save and continue play another day. The player must be able to manage multiple save files (allowing save scumming).
-  -
+  - PH
 - [F1.d] The game must implement an implicit auto-save system to support recovery from unexpected quits. (For example, when the game is launched, if an auto-save entry is present, the game might ask the player "do you want to continue where you left off?" The auto-save entry might or might not be visible among the list of manual save entries available for the player to load as part of F1.c.)
-  -
+  - PH
 
 ## Reflection on F1
