@@ -89,7 +89,8 @@ Looking back on how you achieved the F0 requirements, how has your team’s plan
 
 - [F1.a] The important state of each cell of your game’s grid must be backed by a single contiguous byte array in AoS or SoA format. Your team must statically allocate memory usage for the whole grid.
   - We use a structure of arrays format to store grid data, using an ArrayBuffer to store the data for each cell sequentially. More specifically, we store the waterLevel, species index, and growth level at each cell.
-  - Insert diagram + explanation here
+  - ![F1.a data structure diagram](./src/img/diagramGraphic.png)
+  - Player info is not stored in the byte array.
 - [F1.b] The player must be able to undo every major choice (all the way back to the start of play), even from a saved game. They should be able to redo (undo of undo operations) multiple times.
   - We have created a class called **gameStateRecord** which acts as a record of the game state and gets added to a list after each move. The class contains a serialized version of the ArrayBuffer used for the grid data, and a serialized JSON representation of the player's information. The game has a function that allows us to deserialize any gameStateRecord to set the board to that state. After calling to undo, we pop the topmost gameStateRecord and set the game to that, and add the previous state to a list of redo gameStateRecords. If the player chooses to redo, we pop the top of the redo list similarly to undoing.
 - [F1.c] The player must be able to manually save their progress in the game in a way that allows them to load that save and continue play another day. The player must be able to manage multiple save files (allowing save scumming).
