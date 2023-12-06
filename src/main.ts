@@ -1,6 +1,7 @@
 import "./style.css";
 import { GameGrid } from "./gameGrid";
 import { addToUndoList } from "./saveManagement";
+import url from "./scenarios.json?url";
 
 const gameName = "121 Group 7 Garden Game";
 document.title = gameName;
@@ -9,6 +10,25 @@ document.querySelector("#title")!.textContent = gameName;
 export const gridContainer = document.querySelector("#game")!;
 
 const sunMultiplier = 1;
+
+fetch(url)
+  .then((resp) => resp.json())
+  .then((json) => addScenarios(json));
+
+function addScenarios(scenarioData: any) {
+  console.log(scenarioData);
+  const scenarioButtons = document.querySelector("#scenarioButtons")!;
+  for (const scenario of scenarioData.scenarios) {
+    const button = document.createElement("button");
+    button.textContent = scenario.name;
+    button.addEventListener("click", () => {
+      gameGrid.loadScenario(scenario);
+      updateGame();
+    });
+    button.textContent = scenario.name;
+    scenarioButtons.appendChild(button);
+  }
+}
 
 const sunLevelText = document.querySelector("#sunLevelText")!;
 function updateSunLevel() {

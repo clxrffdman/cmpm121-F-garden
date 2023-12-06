@@ -151,6 +151,15 @@ export class GameGrid {
     }
   }
 
+  public loadScenario(scenario: any) {
+    console.log("Loading scenario: " + scenario);
+    this.player.x = scenario.startingConditions.playerPosition[0];
+    this.player.y = scenario.startingConditions.playerPosition[1];
+    this.sunLevel = scenario.startingConditions.sunLevel;
+    this.timeIndex = 0;
+    this.renderGrid();
+  }
+
   private serializeCell(cell: PlantCell, window: Int8Array) {
     window[0] = cell?.waterLevel!;
     window[1] = cell?.speciesIndex!;
