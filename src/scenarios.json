@@ -2,6 +2,7 @@
   "scenarios": [
     {
       "name": "Scenario A",
+      "randomSeed": "Scenario A Seed",
       "startingConditions": {
         "playerPosition": [2, 2],
         "sunLevel": 3
@@ -25,6 +26,7 @@
     },
     {
      "name": "Scenario B",
+     "randomSeed": "Scenario B Seed",
         "startingConditions": {
             "playerPosition": [3, 3],
             "sunLevel": 1

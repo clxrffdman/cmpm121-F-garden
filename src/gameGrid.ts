@@ -14,9 +14,11 @@ export class GameGrid {
   public timeIndex = 0;
   public sunLevel = 0;
   public player: Player;
+  public randomSeed: string = "";
 
   constructor(gridSize: number) {
     this.gridSize = gridSize;
+    this.randomSeed = "";
     this.grid = [];
     this.gridBuffer = new ArrayBuffer(
       Math.pow(gridSize, 2) * PlantCell.numBytes,
@@ -97,8 +99,12 @@ export class GameGrid {
         let waterLevel = this.cellAt(i, j)?.waterLevel;
         if (waterLevel == null) throw new Error("Water level is null");
         waterLevel += Math.floor(
-          luck(this.timeIndex.toString() + i.toString() + j.toString()) *
-            WATER_SCALE,
+          luck(
+            this.timeIndex.toString() +
+              i.toString() +
+              j.toString() +
+              this.randomSeed,
+          ) * WATER_SCALE,
         );
         waterLevel =
           waterLevel > MAX_WATER_LEVEL ? MAX_WATER_LEVEL : waterLevel;
@@ -156,7 +162,14 @@ export class GameGrid {
     this.player.x = scenario.startingConditions.playerPosition[0];
     this.player.y = scenario.startingConditions.playerPosition[1];
     this.sunLevel = scenario.startingConditions.sunLevel;
+    this.randomSeed = scenario.randomSeed;
+
     this.timeIndex = 0;
+    for (let i = 0; i < this.grid.length; i++) {
+      this.grid[i].waterLevel = 0;
+    }
+    this.updateWaterLevels();
+
     this.renderGrid();
   }
 
