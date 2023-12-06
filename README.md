@@ -70,7 +70,7 @@ Looking back on how you achieved the F0 requirements, how has your team’s plan
 ### F0 Requirements
 
 - [F0.a] You control a character moving on a 2D grid.
-  - Same as previous, but grid changed to use ArrayBuffer in 1D format. We have also adjusted the grid size to be smaller.
+  - Same as previous, but grid changed to use ArrayBuffer and be in a 1D format versus a 2D array.
 - [F0.b] You advance time in the turn-based simulation manually.
   - Same as previous.
 - [F0.c] You can reap (gather) or sow (plant) plants on the grid when your character is near them.
@@ -98,3 +98,5 @@ Looking back on how you achieved the F0 requirements, how has your team’s plan
   - We use the same system mentioned in F1.C and create a new saveGame instance stored after each move. We serialize the saveGame into a JSON format and use localStorage to restore it if the player returns in a new session, prompting the player whether they want to keep using their auto-save data or continue fresh.
 
 ## Reflection on F1
+
+Our game has remained relatively similar as before, but our plans have slightly changed. The game still features ASCII art for it's plant graphics, with each of the 26 letter keys being a unique plant variant. We've divided up the work as before and have managed to refactor a decent amount of the code, especially because of the F1.a requirement. We also had some extraneous code that straight up didn't do anything, so that has all been removed as well. Our game's design has overall not evolved too much as we still don't provide much player feedback, but that is something we plan to focus on going into F2.
