@@ -97,11 +97,6 @@ function addClickListener(buttonId: string, handler: () => void) {
   button?.addEventListener("click", handler);
 }
 
-setInterval(function () {
-  autoSaveState = new saveGame();
-  localStorage.setItem("autoSave", JSON.stringify(autoSaveState));
-}, 5 * 1000);
-
 const localAutoSave = localStorage.getItem("autoSave");
 
 if (localAutoSave) {
@@ -114,6 +109,11 @@ if (localAutoSave) {
     gameGrid.renderGrid();
   }
 }
+
+setInterval(function () {
+  autoSaveState = new saveGame();
+  localStorage.setItem("autoSave", JSON.stringify(autoSaveState));
+}, 5 * 1000);
 
 addClickListener("#passTimeButton", () => {
   updateGame();
@@ -165,6 +165,7 @@ addClickListener("#undoButton", () => {
   const newState = undoStateList.pop();
   if (newState) {
     newState.loadState();
+    gameGrid.renderGrid();
   }
 });
 
@@ -174,6 +175,7 @@ addClickListener("#redoButton", () => {
   const newState = redoStateList.pop();
   if (newState) {
     newState.loadState();
+    gameGrid.renderGrid();
   }
 });
 
