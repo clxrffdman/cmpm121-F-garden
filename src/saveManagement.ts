@@ -55,6 +55,7 @@ export class saveGame {
   }
 }
 
+//Source: https://stackoverflow.com/questions/9267899/arraybuffer-to-base64-encoded-string
 function _arrayBufferToBase64(buffer: ArrayBuffer) {
   const base64 = btoa(
     new Uint8Array(buffer).reduce(
