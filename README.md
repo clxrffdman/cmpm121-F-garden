@@ -70,7 +70,7 @@ Looking back on how you achieved the F0 requirements, how has your team’s plan
 ### F0 Requirements
 
 - [F0.a] You control a character moving on a 2D grid.
-  - Same as previous, but grid changed to use ArrayBuffer in 1D format.
+  - Same as previous, but grid changed to use ArrayBuffer in 1D format. We have also adjusted the grid size to be smaller.
 - [F0.b] You advance time in the turn-based simulation manually.
   - Same as previous.
 - [F0.c] You can reap (gather) or sow (plant) plants on the grid when your character is near them.
@@ -87,13 +87,14 @@ Looking back on how you achieved the F0 requirements, how has your team’s plan
 
 ### F1 Requirements
 
-- [F1.a] A play scenario is completed when some condition is satisfied (e.g. at least X plants at growth level Y or above).
-  - PH
+- [F1.a] The important state of each cell of your game’s grid must be backed by a single contiguous byte array in AoS or SoA format. Your team must statically allocate memory usage for the whole grid.
+  - We use a structure of arrays format to store grid data, using an ArrayBuffer to store the data for each cell sequentially. More specifically, we store the waterLevel, species index, and growth level at each cell.
+  - Insert diagram + explanation here
 - [F1.b] The player must be able to undo every major choice (all the way back to the start of play), even from a saved game. They should be able to redo (undo of undo operations) multiple times.
-  - PH
+  - We have created a class called **gameStateRecord** which acts as a record of the game state and gets added to a list after each move. The class contains a serialized version of the ArrayBuffer used for the grid data, and a serialized JSON representation of the player's information. The game has a function that allows us to deserialize any gameStateRecord to set the board to that state. After calling to undo, we pop the topmost gameStateRecord and set the game to that, and add the previous state to a list of redo gameStateRecords. If the player chooses to redo, we pop the top of the redo list similarly to undoing.
 - [F1.c] The player must be able to manually save their progress in the game in a way that allows them to load that save and continue play another day. The player must be able to manage multiple save files (allowing save scumming).
-  - PH
+  - We have a class called **saveGame** that acts similarly to a gameStateRecord, but contains the undo and redo lists as well. When a player decides to save the game, we generate a new saveGame which is stored in each slot. By doing this, when a player loads a previous save, the undo + redo lists are also restored.
 - [F1.d] The game must implement an implicit auto-save system to support recovery from unexpected quits. (For example, when the game is launched, if an auto-save entry is present, the game might ask the player "do you want to continue where you left off?" The auto-save entry might or might not be visible among the list of manual save entries available for the player to load as part of F1.c.)
-  - PH
+  - We use the same system mentioned in F1.C and create a new saveGame instance stored after each move. We serialize the saveGame into a JSON format and use localStorage to restore it if the player returns in a new session, prompting the player whether they want to keep using their auto-save data or continue fresh.
 
 ## Reflection on F1
