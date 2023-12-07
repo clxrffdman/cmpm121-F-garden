@@ -1,7 +1,6 @@
 import "./style.css";
 import { GameGrid } from "./gameGrid";
 import { addToUndoList } from "./saveManagement";
-import url from "./scenarios.json?url";
 
 const gameName = "121 Group 7 Garden Game";
 document.title = gameName;
@@ -11,7 +10,7 @@ export const gridContainer = document.querySelector("#game")!;
 
 const sunMultiplier = 1;
 
-fetch(url)
+fetch("scenarios.json")
   .then((resp) => resp.json())
   .then((json) => addScenarios(json));
 
