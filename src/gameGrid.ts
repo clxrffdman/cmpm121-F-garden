@@ -60,6 +60,16 @@ export class GameGrid {
 
   update() {
     this.timeIndex++;
+
+    for (const event in this.events) {
+      console.log(event);
+      // if(event.time == this.timeIndex){
+      //   if(event.type == "harvest"){
+      //     this.harvestPlant(this.player.x, this.player.y);
+      //   }
+      // }
+    }
+
     this.updateWaterLevels();
     for (let i = 0; i < this.gridSize; i++) {
       for (let j = 0; j < this.gridSize; j++) {
