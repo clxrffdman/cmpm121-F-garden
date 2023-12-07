@@ -25,28 +25,28 @@
       ]
     },
     {
-     "name": "Scenario B",
-     "randomSeed": "Scenario B Seed",
-        "startingConditions": {
-            "playerPosition": [3, 3],
-            "sunLevel": 1
+      "name": "Scenario B",
+      "randomSeed": "Scenario B Seed",
+      "startingConditions": {
+        "playerPosition": [3, 3],
+        "sunLevel": 1
+      },
+      "weatherPolicy": {
+        "sunninessMult": 0.5
+      },
+      "victoryConditions": {
+        "harvestedPlants": 50
+      },
+      "events": [
+        {
+          "time": 50,
+          "type": "rainTorrent"
         },
-        "weatherPolicy": {
-            "sunninessMult": 0.5
-        },
-        "victoryConditions": {
-            "harvestedPlants": 50
-        },
-        "events": [
-            {
-            "time": 50,
-            "type": "rainTorrent"
-            },
-            {
-            "time": 100,
-            "type": "solarFlare"
-            }
-        ]
+        {
+          "time": 100,
+          "type": "solarFlare"
+        }
+      ]
     }
   ]
 }
