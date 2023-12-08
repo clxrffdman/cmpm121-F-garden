@@ -33,6 +33,7 @@
   },
   "prettier": {},
   "dependencies": {
+    "i18next": "^23.7.8",
     "murmur-32": "^1.0.0"
   }
 }

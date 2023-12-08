@@ -1,6 +1,7 @@
 import "./style.css";
 import { GameGrid } from "./gameGrid";
 import { addToUndoList } from "./saveManagement";
+import { setLanguage, languageInit } from "./languages";
 
 const gameName = "121 Group 7 Garden Game";
 document.title = gameName;
@@ -9,6 +10,9 @@ document.querySelector("#title")!.textContent = gameName;
 export const gridContainer = document.querySelector("#game")!;
 
 const sunMultiplier = 1;
+
+languageInit();
+setLanguage("en");
 
 fetch("scenarios.json")
   .then((resp) => resp.json())
