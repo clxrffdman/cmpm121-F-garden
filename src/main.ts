@@ -53,7 +53,7 @@ document.addEventListener("keydown", (event) => {
   const arrowKeys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
   event.preventDefault();
   const key = event.key;
-  const plantKeys = Array.from({ length: 26 }, (_, i) =>
+  const plantKeys = Array.from({ length: 3 }, (_, i) =>
     String.fromCharCode(97 + i),
   );
 
