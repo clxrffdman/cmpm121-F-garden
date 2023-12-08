@@ -3,9 +3,9 @@ import { Player } from "./player";
 
 export let undoStateList: gameStateRecord[] = [];
 export let redoStateList: gameStateRecord[] = [];
-let curSaveState1: saveGame | null = null;
-let curSaveState2: saveGame | null = null;
+let curSaveState: saveGame | null = null;
 let autoSaveState: saveGame | null = null;
+let saveNumber: number = 1;
 
 export class gameStateRecord {
   public playerJson: string;
@@ -95,23 +95,9 @@ setInterval(function () {
 }, 5 * 1000);
 
 addClickListener("#saveButton1", () => {
-  curSaveState1 = new saveGame();
-});
 
-addClickListener("#loadButton1", () => {
-  if (curSaveState1) {
-    curSaveState1.loadGame();
-  }
-});
-
-addClickListener("#saveButton2", () => {
-  curSaveState2 = new saveGame();
-});
-
-addClickListener("#loadButton2", () => {
-  if (curSaveState2) {
-    curSaveState2.loadGame();
-  }
+  curSaveState = new saveGame();
+  addButton(curSaveState);
 });
 
 addClickListener("#loadAutoSaveButton", () => {
@@ -153,3 +139,19 @@ addClickListener("#redoButton", () => {
     gameGrid.renderGrid();
   }
 });
+
+
+
+function addButton(saveState: saveGame) {
+  const loadButton = document.createElement("button") as HTMLElement;
+  const buttons: HTMLDivElement = document.querySelector("#loadSaves")!;
+  const text:string = "Load Save: " + saveNumber;
+  saveNumber++;
+  loadButton.innerHTML = text;
+  loadButton.setAttribute("style", "margin:auto; background-color: #777;color: black;cursor: pointer;padding: 10px;width: auto;border: 2px solid #666;text-align: center;outline: none;font-size: 15px;border-radius: 10px;");
+  buttons.append(loadButton);
+  loadButton.addEventListener("click", () => {
+      saveState.loadGame();
+  });
+  
+}

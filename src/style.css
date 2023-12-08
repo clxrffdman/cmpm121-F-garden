@@ -33,34 +33,34 @@
 
 .save {
   font-family: Arial;
-  background-color: #d0d0d0;
+  background-color: rgb(110, 65, 22);
   color: rgb(14, 14, 14);
   cursor: pointer;
   padding: 0px;
   width: auto;
-  border: 5px solid #666;
+  border: 5px solid rgb(74, 44, 15);
   text-align: center;
   outline: none;
   font-size: 20px;
-  border-radius: 10px;
+  /* border-radius: 10px; */
 }
 
 .button {
   background-color: #777;
-  color: white;
+  color: black;
   cursor: pointer;
   padding: 10px;
   width: auto;
   border: 2px solid #666;
   text-align: center;
   outline: none;
-  font-size: 10px;
+  font-size: 15px;
   border-radius: 10px;
 }
 
 .time-button {
   position: sticky;
-  left: 45%;
+  left: 44%;
   right: 50%;
   background-color: rgb(40, 67, 43);
   color: rgb(255, 255, 255);
@@ -71,4 +71,23 @@
   text-align: center;
   font-size: 15px;
   border-radius: 10px;
+}
+
+.interaction{
+
+  font-family: Arial;
+  background-color: rgb(32, 158, 65);
+  color: rgb(14, 14, 14);
+  cursor: pointer;
+  padding: 10px;
+  width: auto;
+  border: 5px solid rgb(22, 110, 45);
+  text-align: justify;
+  outline: none;
+  font-size: 20px;
+}
+
+.loadSaves{
+  margin:auto;
+  max-width: 100px;
 }
