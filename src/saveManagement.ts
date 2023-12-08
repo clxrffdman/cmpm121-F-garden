@@ -1,5 +1,6 @@
 import { gameGrid, GRID_SIZE, addClickListener } from "./main"; // Adjust the import path as needed
 import { Player } from "./player";
+import i18n from "./languages";
 
 export let undoStateList: gameStateRecord[] = [];
 export let redoStateList: gameStateRecord[] = [];
@@ -80,7 +81,7 @@ const localAutoSave = localStorage.getItem("autoSave");
 
 setTimeout(() => {
   if (localAutoSave) {
-    const help = confirm("Autosave detected, do you want to continue from it?");
+    const help = confirm(i18n.t("autosaveDetected"));
     if (help) {
       const save: saveGame = JSON.parse(localAutoSave) as saveGame;
       const save2 = new saveGame();
@@ -108,7 +109,7 @@ addClickListener("#loadAutoSaveButton", () => {
 });
 
 addClickListener("#reset", () => {
-  const reset = confirm("Reset All Data?");
+  const reset = confirm(i18n.t("resetAll"));
   if (reset) {
     localStorage.clear();
     location.reload();
@@ -155,4 +156,18 @@ function addButton(saveState: saveGame) {
   loadButton.addEventListener("click", () => {
     saveState.loadGame();
   });
+}
+
+export function updateButtonsVisual() {
+  const savesDiv = document.getElementById("loadSaves");
+  if (savesDiv) {
+    const children = savesDiv.children;
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i];
+      const match = child.innerHTML.match(/\d+$/);
+      const num = match ? parseInt(match[0], 10) : null;
+
+      child.innerHTML = i18n.t("loadSave") + num;
+    }
+  }
 }

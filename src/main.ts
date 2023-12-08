@@ -1,10 +1,15 @@
 import "./style.css";
 import { GameGrid } from "./gameGrid";
 import { addToUndoList } from "./saveManagement";
+import { setLanguage, languageInit } from "./languages";
+import i18n from "./languages";
 
 const gameName = "121 Group 7 Garden Game";
 document.title = gameName;
 document.querySelector("#title")!.textContent = gameName;
+
+languageInit();
+setLanguage("en");
 
 export const gridContainer = document.querySelector("#game")!;
 
@@ -32,7 +37,7 @@ function addScenarios(scenarioData: any) {
 const sunLevelText = document.querySelector("#sunLevelText")!;
 function updateSunLevel() {
   gameGrid.sunLevel = Math.floor(Math.random() * sunMultiplier * 4);
-  sunLevelText.textContent = `Sun Level: ${gameGrid.sunLevel}`;
+  sunLevelText.textContent = i18n.t("sunLevelText") + ` ${gameGrid.sunLevel}`;
 }
 
 export const GRID_SIZE = 16;
@@ -73,6 +78,13 @@ document.addEventListener("keydown", (event) => {
   if (key == " ") {
     harvest();
   }
+});
+
+const languageDropdown = document.getElementById(
+  "languageButton",
+) as HTMLSelectElement;
+languageDropdown.addEventListener("change", function () {
+  setLanguage(languageDropdown.value);
 });
 
 function updateGame() {
