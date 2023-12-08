@@ -78,16 +78,18 @@ function _base64ToArrayBuffer(base64: string) {
 
 const localAutoSave = localStorage.getItem("autoSave");
 
-if (localAutoSave) {
-  const help = confirm("Autosave detected, do you want to continue from it?");
-  if (help) {
-    const save: saveGame = JSON.parse(localAutoSave) as saveGame;
-    const save2 = new saveGame();
-    Object.assign(save2, save);
-    save2.loadGame();
-    gameGrid.renderGrid();
+setTimeout(() => {
+  if (localAutoSave) {
+    const help = confirm("Autosave detected, do you want to continue from it?");
+    if (help) {
+      const save: saveGame = JSON.parse(localAutoSave) as saveGame;
+      const save2 = new saveGame();
+      Object.assign(save2, save);
+      save2.loadGame();
+      gameGrid.renderGrid();
+    }
   }
-}
+}, 0);
 
 setInterval(function () {
   autoSaveState = new saveGame();

@@ -7,6 +7,11 @@ const NUM_NEIGHBORS_PLANT_CANT_GROW = 4;
 const WATER_SCALE = 1.5;
 const MAX_WATER_LEVEL = 10;
 
+interface Event {
+  time: number;
+  type: string;
+}
+
 export class GameGrid {
   private gridSize: number;
   private grid: PlantCell[];
@@ -14,7 +19,8 @@ export class GameGrid {
   public timeIndex = 0;
   public sunLevel = 0;
   public player: Player;
-  public randomSeed: string = "";
+  private randomSeed: string = "";
+  private events: Event[] = [];
 
   constructor(gridSize: number) {
     this.gridSize = gridSize;
@@ -24,6 +30,7 @@ export class GameGrid {
       Math.pow(gridSize, 2) * PlantCell.numBytes,
     );
     this.player = new Player(2, 2);
+    this.events = [];
     this.initializeGrid();
   }
 
@@ -52,6 +59,18 @@ export class GameGrid {
   }
 
   update() {
+    this.timeIndex++;
+
+    for (const event in this.events) {
+      console.log(event);
+      // if(event.time == this.timeIndex){
+      //   if(event.type == "harvest"){
+      //     this.harvestPlant(this.player.x, this.player.y);
+      //   }
+      // }
+    }
+
+    this.updateWaterLevels();
     for (let i = 0; i < this.gridSize; i++) {
       for (let j = 0; j < this.gridSize; j++) {
         const cell = this.cellAt(i, j);
@@ -64,9 +83,8 @@ export class GameGrid {
         }
       }
     }
-    this.updateWaterLevels();
+
     this.renderGrid();
-    this.timeIndex++;
   }
 
   determineNumNeighbors(i: number, j: number): number {
