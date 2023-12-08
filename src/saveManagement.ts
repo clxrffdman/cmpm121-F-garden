@@ -95,7 +95,6 @@ setInterval(function () {
 }, 5 * 1000);
 
 addClickListener("#saveButton1", () => {
-
   curSaveState = new saveGame();
   addButton(curSaveState);
 });
@@ -140,18 +139,18 @@ addClickListener("#redoButton", () => {
   }
 });
 
-
-
 function addButton(saveState: saveGame) {
   const loadButton = document.createElement("button") as HTMLElement;
   const buttons: HTMLDivElement = document.querySelector("#loadSaves")!;
-  const text:string = "Load Save: " + saveNumber;
+  const text: string = "Load Save: " + saveNumber;
   saveNumber++;
   loadButton.innerHTML = text;
-  loadButton.setAttribute("style", "margin:auto; background-color: #777;color: black;cursor: pointer;padding: 10px;width: auto;border: 2px solid #666;text-align: center;outline: none;font-size: 15px;border-radius: 10px;");
+  loadButton.setAttribute(
+    "style",
+    "margin:auto; background-color: #777;color: black;cursor: pointer;padding: 10px;width: auto;border: 2px solid #666;text-align: center;outline: none;font-size: 15px;border-radius: 10px;",
+  );
   buttons.append(loadButton);
   loadButton.addEventListener("click", () => {
-      saveState.loadGame();
+    saveState.loadGame();
   });
-  
 }

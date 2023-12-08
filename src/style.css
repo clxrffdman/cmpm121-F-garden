@@ -73,8 +73,7 @@
   border-radius: 10px;
 }
 
-.interaction{
-
+.interaction {
   font-family: Arial;
   background-color: rgb(32, 158, 65);
   color: rgb(14, 14, 14);
@@ -87,7 +86,7 @@
   font-size: 20px;
 }
 
-.loadSaves{
-  margin:auto;
+.loadSaves {
+  margin: auto;
   max-width: 100px;
 }
