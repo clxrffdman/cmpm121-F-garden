@@ -1,4 +1,4 @@
-import { plantSpeciesArray } from "./plantInstances";
+import { PlantInstance, plantSpeciesArray } from "./plantInstances";
 export interface Crop {
   type: string;
   value: number;
@@ -50,7 +50,7 @@ export class PlantCell {
     return icon;
   }
 
-  public get species(): plantSpecies | null {
+  public get species(): PlantInstance | null {
     if (!this.hasPlant()) return null;
     return plantSpeciesArray[this.speciesIndex];
   }
@@ -92,32 +92,4 @@ export class PlantCell {
     }
     return null;
   }
-}
-
-export interface plantSpecies {
-  name: string;
-  maxGrowthLevel: number;
-  waterRequired: number;
-  sunRequired: number;
-  cropValue: number;
-  growthStages: string[];
-}
-
-export function createPlantSpecies(
-  name: string,
-  maxGrowthLevel: number,
-  waterRequired: number,
-  sunRequired: number,
-  cropValue: number,
-  growthStages: string[],
-): plantSpecies {
-  growthStages.unshift("_", ".");
-  return {
-    name,
-    maxGrowthLevel,
-    waterRequired,
-    sunRequired,
-    cropValue,
-    growthStages,
-  };
 }

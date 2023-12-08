@@ -1,4 +1,36 @@
-import { plantSpecies, createPlantSpecies } from "./plant";
+export class Plant {
+  name: string;
+  constructor(name: string) {
+    this.name = name;
+  }
+
+  canGrow() {}
+}
+
+export class PlantInstance extends Plant {
+  maxGrowthLevel: number;
+  waterRequired: number;
+  sunRequired: number;
+  cropValue: number;
+  growthStages: string[];
+
+  constructor(
+    name: string,
+    maxGrowthLevel: number,
+    waterRequired: number,
+    sunRequired: number,
+    cropValue: number,
+    growthStages: string[],
+  ) {
+    super(name);
+    this.maxGrowthLevel = maxGrowthLevel;
+    this.waterRequired = waterRequired;
+    this.sunRequired = sunRequired;
+    this.cropValue = cropValue;
+    this.growthStages = growthStages;
+    this.growthStages.unshift("_", ".");
+  }
+}
 
 //To add a plant to the game you just have to provide these fields
 //
@@ -9,8 +41,8 @@ import { plantSpecies, createPlantSpecies } from "./plant";
 //The value of the plant once harvested
 //An array of symbols to be used
 
-export const plantSpeciesArray: plantSpecies[] = [
-  createPlantSpecies("apple", 10, 8, 2, 20, ["a", "A"]),
-  createPlantSpecies("banana", 11, 6, 3, 30, ["b", "B"]),
-  createPlantSpecies("carrot", 4, 2, 2, 5, ["c", "C"]),
+export const plantSpeciesArray: PlantInstance[] = [
+  new PlantInstance("apple", 10, 8, 2, 20, ["a", "A"]),
+  new PlantInstance("banana", 11, 6, 3, 30, ["b", "B"]),
+  new PlantInstance("carrot", 4, 2, 2, 5, ["c", "C"]),
 ];
