@@ -13,7 +13,7 @@ languageInit();
 export const gridContainer = document.querySelector("#game")!;
 
 const sunMultiplier = 1;
-export let scenarioButtons: { [key: string]: HTMLButtonElement } = {};
+export const scenarioButtons: { [key: string]: HTMLButtonElement } = {};
 
 fetch("scenarios.json")
   .then((resp) => resp.json())
