@@ -1,6 +1,6 @@
 import i18n from "i18next";
 import { updateButtonsVisual } from "./saveManagement";
-import { gameGrid } from "./main";
+import { gameGrid, scenarioButtons } from "./main";
 
 const translationHtmls: string[] = [
   "passTimeButton",
@@ -33,6 +33,8 @@ const resources = {
       resetAll: "Reset All Data",
       waterLevel: "Water Level: ",
       neighbors: "Neighbors: ",
+      scenarioA: "Scenario A",
+      scenarioB: "Scenario B",
     },
   },
   kr: {
@@ -52,6 +54,8 @@ const resources = {
       resetAll: "모든 데이터 재설정",
       waterLevel: "수위: ",
       neighbors: "이웃: ",
+      scenarioA: "상황 A",
+      scenarioB: "상황 B",
     },
   },
   pr: {
@@ -72,6 +76,8 @@ const resources = {
       resetAll: "بازنشانی همه داده ها",
       waterLevel: "سطح آب: ",
       neighbors: "همسایه ها: ",
+      scenarioA: "وضعیت A",
+      scenarioB: "وضعیت B",
     },
   },
 };
@@ -103,7 +109,14 @@ function updateTranslations() {
     contentContainer!.innerHTML = i18n.t(element);
   });
   updateButtonsVisual();
+  updateScenarioButtons();
   gameGrid.renderGrid();
+}
+
+function updateScenarioButtons() {
+  for (const key in scenarioButtons) {
+    scenarioButtons[key].textContent = i18n.t(key);
+  }
 }
 
 export default i18n;

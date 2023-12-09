@@ -13,6 +13,7 @@ languageInit();
 export const gridContainer = document.querySelector("#game")!;
 
 const sunMultiplier = 1;
+export let scenarioButtons: { [key: string]: HTMLButtonElement } = {};
 
 fetch("scenarios.json")
   .then((resp) => resp.json())
@@ -20,16 +21,16 @@ fetch("scenarios.json")
 
 function addScenarios(scenarioData: any) {
   console.log(scenarioData);
-  const scenarioButtons = document.querySelector("#scenarioButtons")!;
+  const scenarioButtonParent = document.querySelector("#scenarioButtons")!;
   for (const scenario of scenarioData.scenarios) {
     const button = document.createElement("button");
-    button.textContent = scenario.name;
     button.addEventListener("click", () => {
       gameGrid.loadScenario(scenario);
       updateGame();
     });
-    button.textContent = scenario.name;
-    scenarioButtons.appendChild(button);
+    button.textContent = i18n.t(scenario.name);
+    scenarioButtons[scenario.name] = button;
+    scenarioButtonParent.appendChild(button);
   }
 }
 

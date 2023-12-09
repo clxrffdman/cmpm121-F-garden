@@ -1,7 +1,7 @@
 {
   "scenarios": [
     {
-      "name": "Scenario A",
+      "name": "scenarioA",
       "randomSeed": "Scenario A Seed",
       "startingConditions": {
         "playerPosition": [2, 2],
@@ -25,7 +25,7 @@
       ]
     },
     {
-      "name": "Scenario B",
+      "name": "scenarioB",
       "randomSeed": "Scenario B Seed",
       "startingConditions": {
         "playerPosition": [3, 3],
