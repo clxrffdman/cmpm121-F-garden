@@ -158,6 +158,7 @@ Our game has remained relatively similar as before, but our plans have slightly 
         }
       ]
     }
+    ```
   - Each scenario has a name, a randomized seed (we use seeded RNG for all random-based events in our game), starting conditions such as player position and sun level, weather, victory conditions, and events that happen on different turns.
 - [F2.b] Internal DSL for plant types and growth conditions: Within the main programming language used for the rest of your game, you should implement and use a domain-specific language for defining your different types of plants and the unique growth rules that apply to each.
   - Do my plant types need to be structurally different or can they just be numerically different? Your plant types need to be structurally different in the sense that the conditions under which they grow cannot easily be summarized by different numerical thresholds. For example, it wouldn't work to have only one plant type that requires two neighbor plans of the same species and another plant type that requires three neighbors of the same species. Instead, you might have one plant type that cares about neighboring plant species while another type cares about having only a moderate level of soil moisture. You might need to adjust your game design to one that better shows off the expressiveness of your internal DSL (one that highlights the value of being able to use arbitrary host-language expressions).
