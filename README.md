@@ -102,3 +102,66 @@ Looking back on how you achieved the F0 requirements, how has your team’s plan
 ## Reflection on F1
 
 Our game has remained relatively similar as before, but our plans have slightly changed. The game still features ASCII art for it's plant graphics, with each of the 26 letter keys being a unique plant variant. We expect to redesign the plant types a bit for F3. We've divided up the work as before and have managed to refactor a decent amount of the code, especially because of the F1.a requirement. We also had some extraneous code that straight up didn't do anything, so that has all been removed as well. Our game's design has overall not evolved too much as we still don't provide much player feedback, but that is something we plan to focus on going into F2.
+
+## How we satisfied the software requirements for F2
+
+### F0+F1 Requirements
+
+- [F0.a] You control a character moving on a 2D grid.
+  - Same as previous.
+- [F0.b] You advance time in the turn-based simulation manually.
+  - Same as previous.
+- [F0.c] You can reap (gather) or sow (plant) plants on the grid when your character is near them.
+  - Same as previous.
+- [F0.d] Grid cells have sun and water levels. The incoming sun and water for each cell is somehow randomly generated each turn. Sun energy cannot be stored in a cell (it is used immediately or lost) while water moisture can be slowly accumulated over several turns.
+  - Same as previous.
+- [F0.e] Each plant on the grid has a type (e.g. one of 3 species) and a growth level (e.g. “level 1”, “level 2”, “level 3”).
+  - Same as previous.
+- [F0.f] Simple spatial rules govern plant growth based on sun, water, and nearby plants (growth is unlocked by satisfying conditions).
+  - Same as previous.
+- [F0.g] A play scenario is completed when some condition is satisfied (e.g. at least X plants at growth level Y or above).
+  - Same as previous.
+- [F1.a] The important state of each cell of your game’s grid must be backed by a single contiguous byte array in AoS or SoA format. Your team must statically allocate memory usage for the whole grid.
+  - Same as previous.
+- [F1.b] The player must be able to undo every major choice (all the way back to the start of play), even from a saved game. They should be able to redo (undo of undo operations) multiple times.
+  - Same as previous.
+- [F1.c] The player must be able to manually save their progress in the game in a way that allows them to load that save and continue play another day. The player must be able to manage multiple save files (allowing save scumming).
+  - Same as previous, but save management code has been moved to it's own file.
+- [F1.d] The game must implement an implicit auto-save system to support recovery from unexpected quits. (For example, when the game is launched, if an auto-save entry is present, the game might ask the player "do you want to continue where you left off?" The auto-save entry might or might not be visible among the list of manual save entries available for the player to load as part of F1.c.)
+  - Same as previous, but save management code has been moved to it's own file.
+
+### F2 Requirements
+
+- [F2.a] External DSL for scenario designs: In separate text file, designers should be able to express the design of different gameplay scenarios, e.g. starting conditions, weather randomization policy, and victory conditions. The language must be able to schedule unique events that happen at specific times.
+  - For our external DSL, we use a JSON file that stores a set of scenarios for can be selected at run time in the game's UI.
+  - ```{
+      "name": "scenarioA",                    //Scenarios Name (used for translation)
+      "randomSeed": "Scenario A Seed",        //RNG Seed
+      "startingConditions": {                 //Starting Conditions
+        "playerPosition": [2, 2],
+        "sunLevel": 3
+      },
+      "weatherPolicy": {                      //Weather Multipliers
+        "sunninessMult": 1.1
+      },
+      "victoryConditions": {                  //Win State Conditions
+        "harvestedPlants": 10
+      },
+      "events": [                             //Special events (type + turn #)
+        {
+          "time": 5,
+          "type": "rainTorrent"
+        },
+        {
+          "time": 10,
+          "type": "solarFlare"
+        }
+      ]
+    }
+  - Each scenario has a name, a randomized seed (we use seeded RNG for all random-based events in our game), starting conditions such as player position and sun level, weather, victory conditions, and events that happen on different turns.
+- [F2.b] Internal DSL for plant types and growth conditions: Within the main programming language used for the rest of your game, you should implement and use a domain-specific language for defining your different types of plants and the unique growth rules that apply to each.
+  - Do my plant types need to be structurally different or can they just be numerically different? Your plant types need to be structurally different in the sense that the conditions under which they grow cannot easily be summarized by different numerical thresholds. For example, it wouldn't work to have only one plant type that requires two neighbor plans of the same species and another plant type that requires three neighbors of the same species. Instead, you might have one plant type that cares about neighboring plant species while another type cares about having only a moderate level of soil moisture. You might need to adjust your game design to one that better shows off the expressiveness of your internal DSL (one that highlights the value of being able to use arbitrary host-language expressions).
+
+## Reflection on F2
+
+Our game has remained relatively similar as before, but our plans have slightly changed. The game still features ASCII art for it's plant graphics, with each of the 26 letter keys being a unique plant variant. We expect to redesign the plant types a bit for F3. We've divided up the work as before and have managed to refactor a decent amount of the code, especially because of the F1.a requirement. We also had some extraneous code that straight up didn't do anything, so that has all been removed as well. Our game's design has overall not evolved too much as we still don't provide much player feedback, but that is something we plan to focus on going into F2.
