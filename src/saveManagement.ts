@@ -145,7 +145,7 @@ addClickListener("#redoButton", () => {
 function addButton(saveState: saveGame) {
   const loadButton = document.createElement("button") as HTMLElement;
   const buttons: HTMLDivElement = document.querySelector("#loadSaves")!;
-  const text: string = "Load Save: " + saveNumber;
+  const text: string = i18n.t("loadSave") + saveNumber;
   saveNumber++;
   loadButton.innerHTML = text;
   loadButton.setAttribute(

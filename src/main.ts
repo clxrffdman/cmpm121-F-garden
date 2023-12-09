@@ -9,7 +9,6 @@ document.title = gameName;
 document.querySelector("#title")!.textContent = gameName;
 
 languageInit();
-setLanguage("en");
 
 export const gridContainer = document.querySelector("#game")!;
 
@@ -42,6 +41,7 @@ function updateSunLevel() {
 
 export const GRID_SIZE = 16;
 export const gameGrid = new GameGrid(GRID_SIZE);
+
 updateGame();
 
 export function addClickListener(buttonId: string, handler: () => void) {
@@ -86,6 +86,12 @@ const languageDropdown = document.getElementById(
 languageDropdown.addEventListener("change", function () {
   setLanguage(languageDropdown.value);
 });
+
+const localLanguage = localStorage.getItem("language");
+if (localLanguage) {
+  setLanguage(localLanguage);
+  languageDropdown.value = localLanguage;
+}
 
 function updateGame() {
   updateSunLevel();

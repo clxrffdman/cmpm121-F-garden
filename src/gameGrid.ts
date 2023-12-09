@@ -1,6 +1,7 @@
 import { PlantCell } from "./plant";
 import { gridContainer } from "./main";
 import { Player } from "./player";
+import i18n from "./languages";
 import luck from "./luck";
 
 const NUM_NEIGHBORS_PLANT_CANT_GROW = 4;
@@ -162,10 +163,9 @@ export class GameGrid {
         // Add tooltip
         cell.setAttribute(
           "title",
-          `Water Level: ${waterLevel}\nNeighbors:${this.determineNumNeighbors(
-            y,
-            x,
-          )}`,
+          `${i18n.t("waterLevel")} ${waterLevel}\n${i18n.t(
+            "neighbors",
+          )}${this.determineNumNeighbors(y, x)}`,
         );
 
         row.appendChild(cell);
