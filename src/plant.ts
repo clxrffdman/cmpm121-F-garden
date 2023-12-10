@@ -57,7 +57,13 @@ export class PlantCell {
 
   grow(currWater: number, currSun: number) {
     if (this.hasPlant()) {
-      if (plantSpeciesArray[this.speciesIndex].canGrow(this.growthLevel, currSun, currWater)) {
+      if (
+        plantSpeciesArray[this.speciesIndex].canGrow(
+          this.growthLevel,
+          currSun,
+          currWater,
+        )
+      ) {
         this.growthLevel++;
       }
     }

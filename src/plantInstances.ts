@@ -3,9 +3,11 @@ export class Plant {
   constructor(name: string) {
     this.name = name;
   }
-  
+
   // eslint-disable-next-line no-unused-vars
-  canGrow(_growth:number, _sun:number, _water:number):boolean{return false}
+  canGrow(_growth: number, _sun: number, _water: number): boolean {
+    return false;
+  }
 }
 
 export class PlantInstance extends Plant {
@@ -32,8 +34,12 @@ export class PlantInstance extends Plant {
     this.growthStages.unshift("_", ".");
   }
 
-  canGrow(growth:number, sun:number, water:number): boolean {
-    return growth < this.maxGrowthLevel && sun >= this.sunRequired && water >= this.waterRequired;
+  canGrow(growth: number, sun: number, water: number): boolean {
+    return (
+      growth < this.maxGrowthLevel &&
+      sun >= this.sunRequired &&
+      water >= this.waterRequired
+    );
   }
 }
 

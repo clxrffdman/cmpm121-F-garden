@@ -74,15 +74,15 @@ export class GameGrid {
     this.updateWaterLevels();
     for (let i = 0; i < this.gridSize; i++) {
       for (let j = 0; j < this.gridSize; j++) {
-        this.updatePlants(this.cellAt(i, j)!,this.determineNumNeighbors(i, j));
+        this.updatePlants(this.cellAt(i, j)!, this.determineNumNeighbors(i, j));
       }
     }
     this.renderGrid();
   }
 
-  updatePlants(cell:PlantCell, numNeighbors:number){
+  updatePlants(cell: PlantCell, numNeighbors: number) {
     if (cell != undefined && cell.hasPlant()) {
-      if (numNeighbors < NUM_NEIGHBORS_PLANT_CANT_GROW){
+      if (numNeighbors < NUM_NEIGHBORS_PLANT_CANT_GROW) {
         if (cell.growthLevel < cell.species!.maxGrowthLevel) {
           cell!.grow(cell.waterLevel, this.sunLevel);
         }
