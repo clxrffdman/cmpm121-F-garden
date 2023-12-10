@@ -57,10 +57,7 @@ export class PlantCell {
 
   grow(currWater: number, currSun: number) {
     if (this.hasPlant()) {
-      const levelReq = this.growthLevel < this.species!.maxGrowthLevel;
-      const waterReq = currWater >= this.species!.waterRequired;
-      const sunReq = currSun >= this.species!.sunRequired;
-      if (levelReq && waterReq && sunReq) {
+      if (plantSpeciesArray[this.speciesIndex].canGrow(this.growthLevel, currSun, currWater)) {
         this.growthLevel++;
       }
     }
