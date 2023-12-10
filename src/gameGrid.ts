@@ -134,49 +134,48 @@ export class GameGrid {
     }
   }
 
-
-  cellClicked(x:number, y:number){
-    console.log("clicked",x, y);
+  cellClicked(x: number, y: number) {
+    console.log("clicked", x, y);
     console.log("player", this.player.x, this.player.y);
-    if(x > this.player.x){
-      if(x-this.player.x > 1){
+    if (x > this.player.x) {
+      if (x - this.player.x > 1) {
         this.player.directionInput("ArrowRight");
       } else {
-        if(this.cellAt(x,y)?.hasPlant()){
+        if (this.cellAt(x, y)?.hasPlant()) {
           this.harvestPlant(x, y);
         } else {
-          this.plantPopUp(x,y);
+          this.plantPopUp(x, y);
         }
       }
-    } else if (x < this.player.x){
-      if(this.player.x - x > 1){
+    } else if (x < this.player.x) {
+      if (this.player.x - x > 1) {
         this.player.directionInput("ArrowLeft");
       } else {
-        if(this.cellAt(x,y)?.hasPlant()){
+        if (this.cellAt(x, y)?.hasPlant()) {
           this.harvestPlant(x, y);
         } else {
-          this.plantPopUp(x,y);
+          this.plantPopUp(x, y);
         }
       }
     }
-    if(y > this.player.y){
-      if(y - this.player.y > 1){
+    if (y > this.player.y) {
+      if (y - this.player.y > 1) {
         this.player.directionInput("ArrowDown");
       } else {
-        if(this.cellAt(x,y)?.hasPlant()){
+        if (this.cellAt(x, y)?.hasPlant()) {
           this.harvestPlant(x, y);
         } else {
-          this.plantPopUp(x,y);
+          this.plantPopUp(x, y);
         }
       }
-    } else if (y < this.player.y){
-      if(this.player.y - y > 1){
+    } else if (y < this.player.y) {
+      if (this.player.y - y > 1) {
         this.player.directionInput("ArrowUp");
       } else {
-        if(this.cellAt(x,y)?.hasPlant()){
+        if (this.cellAt(x, y)?.hasPlant()) {
           this.harvestPlant(x, y);
         } else {
-          this.plantPopUp(x,y);
+          this.plantPopUp(x, y);
         }
       }
     }
@@ -184,7 +183,7 @@ export class GameGrid {
     this.update();
   }
 
-  plantPopUp(x:number, y:number){
+  plantPopUp(x: number, y: number) {
     console.log("plant at:", x, y);
   }
 
@@ -196,7 +195,7 @@ export class GameGrid {
 
       for (let x = 0; x < this.gridSize; x++) {
         const cell = document.createElement("div");
-        cell!.addEventListener('click', ()=> {
+        cell!.addEventListener("click", () => {
           this.cellClicked(x, y);
         });
 
@@ -234,7 +233,6 @@ export class GameGrid {
       gridContainer.appendChild(row);
     }
   }
-
 
   public loadScenario(scenario: any) {
     console.log("Loading scenario: " + scenario);
