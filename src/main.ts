@@ -102,6 +102,8 @@ const localLanguage = localStorage.getItem("language");
 if (localLanguage) {
   setLanguage(localLanguage);
   languageDropdown.value = localLanguage;
+} else {
+  setLanguage("en");
 }
 
 function updateGame() {

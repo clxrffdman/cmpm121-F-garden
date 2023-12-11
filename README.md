@@ -248,4 +248,57 @@ Since we're a bit behind, we've been working on some of the F3 bits alongside th
 - [F2.b] Internal DSL for plant types and growth conditions: Within the main programming language used for the rest of your game, you should implement and use a domain-specific language for defining your different types of plants and the unique growth rules that apply to each.
   - Same as previous.
 
-### F3 Requirements
+## F3 Requirements
+
+### Internationalization [F3.a]
+
+We used [i18next](https://www.i18next.com/) as our internationalization framework of choice. The languages.ts file initializes i18n and holds the translations + functions that update text to their translated values. More specifically, the file has a `updateTranslations()` function that updates all HTML elements that need to be updated by going through the translationHtmls[] and editing the text contents of each HTML element found from the list.
+
+When adding a new language, both `index.html` and `languages.ts` need to be edited. `index.html` has a dropdown that facilitates the swapping of langauges, and a new dropdown option needs to be added with each language. `languages.ts` has the actual translated contents of each language, in the resources[]. Here is an example of the English translations.
+
+```
+en: {
+    translation: {
+      appleButton: "Plant Apple",
+      bananaButton: "Plant Banana",
+      carrotButton: "Plant Carrot",
+      passTimeButton: "Pass Time",
+      title: "121 Group 7 Garden Game",
+      sunLevelText: "Sun Level",
+      undoButton: "Undo",
+      redoButton: "Redo",
+      saveButton1: "Save Game",
+      loadAutoSaveButton: "Load Auto Save",
+      reset: "Clear Data",
+      loadSave: "Load Save: ",
+      saveManagement: "Save Management",
+      scenarios: "Scenarios",
+      autosaveDetected: "Autosave detected, do you want to continue from it?",
+      resetAll: "Reset All Data",
+      waterLevel: "Water Level: ",
+      neighbors: "Neighbors: ",
+      scenarioA: "Scenario A",
+      scenarioB: "Scenario B",
+    },
+  },
+```
+
+To access these translations, `i18n.t("id")` retrieves the translation for a given string `id` in the current language, and the `setLanguage(language)` function in languages.ts allows for the changing of languages and calls `updateTranslations()`. Any incomplete translations will simply be filled in with the ID of the element, so we can spot missing translations quickly and easily.
+
+### Localization [F3.b]
+
+Our game supports English, Korean, and Farsi. Using the internationalization solution mentioned above, we added new languages by replacing all direct strings used for HTML text content with our translations. English was straightforward since we all already speak English, but for Korean and Farsi, we [provided ChatGPT with the English translations](https://chat.openai.com/share/2b37a269-676d-4af3-a9d0-25dc5aa3c358) and some additional context as comments when necessary to generate translations. We then cross-checked with Google Translate to see if they were complete nonsense or not.
+
+The user selects a language using the dropdown on the right side of the game window. Upon selecting a language, all existing and new text prompts are replaced with that language's translations. We also save the user's preferred language using `localStorage` and load it on entry so that they aren't blindsided with English if they reset or come back later.
+
+### Mobile Installation [F3.c]
+
+How did you get your game to be installable on a smartphone-class mobile device? If you followed a tutorial, guide, video, or blogpost, directly link to those resources that helped you learn. What changes were needed to make the game installable?
+
+### Mobile Play (Offline) [F3.d]
+
+What changes to your design were needed to make it play well on a mobile device? Were there any changes needed to make sure it worked in the offline case?
+
+## Reflection on F3
+
+Looking back on how you achieved the new F3 requirements, how has your team’s plan changed? Did you reconsider any of the choices you previously described for Tools and Materials or your Roles? Has your game design evolved now that you've started to think about giving the player more feedback? It would be very suspicious if you didn’t need to change anything. There’s learning value in you documenting how your team’s thinking has changed over time.
