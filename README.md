@@ -292,6 +292,7 @@ Our game supports English, Korean, and Farsi. Using the internationalization sol
 The user selects a language using the dropdown on the right side of the game window. Upon selecting a language, all existing and new text prompts are replaced with that language's translations. We also save the user's preferred language using `localStorage` and load it on entry so that they aren't blindsided with English if they reset or come back later.
 
 ### Mobile Installation [F3.c]
+
 The process to make our game into a playable offline PWA was fairly simple. Our game was made to run in the browser, and was made using TypeScript, CSS, and HTML, so to change it into something you could download and play on a phone was possible by just adding one line to the HTML file in the <head>, and then hooking up a JSON file in the root directory telling the PWA everything it needed to know about our game.
 The tutorial/guide that I followed was this one "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Installable_PWAs"
 
