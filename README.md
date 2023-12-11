@@ -161,7 +161,55 @@ Our game has remained relatively similar as before, but our plans have slightly 
     ```
   - Each scenario has a name, a randomized seed (we use seeded RNG for all random-based events in our game), starting conditions such as player position and sun level, weather, victory conditions, and events that happen on different turns.
 - [F2.b] Internal DSL for plant types and growth conditions: Within the main programming language used for the rest of your game, you should implement and use a domain-specific language for defining your different types of plants and the unique growth rules that apply to each.
-  - Do my plant types need to be structurally different or can they just be numerically different? Your plant types need to be structurally different in the sense that the conditions under which they grow cannot easily be summarized by different numerical thresholds. For example, it wouldn't work to have only one plant type that requires two neighbor plans of the same species and another plant type that requires three neighbors of the same species. Instead, you might have one plant type that cares about neighboring plant species while another type cares about having only a moderate level of soil moisture. You might need to adjust your game design to one that better shows off the expressiveness of your internal DSL (one that highlights the value of being able to use arbitrary host-language expressions).
+  - We implemented a DSL in the form of a subclass sandbox pattern. We have an overall plant class that has the generic data for each plant and a single canGrow() function which can be overridden by subclasses to implement different functionality. To create a new class you just have to create a subclass that extends the Plant class and and overrides the can grow function to the neccisary operations to return true when it can grow. All of the class instances are grouped together within oone file and even one array. To create a new variant of a plant it is as easy as adding a new instance of a plant subclass to the species array. Here is an example of one of the subclasses you can make.
+  - ```export class PlantInstance extends Plant {
+  maxGrowthLevel: number;
+  waterRequired: number;
+  sunRequired: number;
+  cropValue: number;
+  growthStages: string[];
+
+  constructor(
+    name: string,
+    maxGrowthLevel: number,
+    waterRequired: number,
+    sunRequired: number,
+    cropValue: number,
+    growthStages: string[],
+  ) {
+    super(name);
+    this.maxGrowthLevel = maxGrowthLevel;
+    this.waterRequired = waterRequired;
+    this.sunRequired = sunRequired;
+    this.cropValue = cropValue;
+    this.growthStages = growthStages;
+    this.growthStages.unshift("_", ".");
+  }
+
+  canGrow(growth: number, sun: number, water: number): boolean {
+    return (
+      growth < this.maxGrowthLevel &&
+      sun >= this.sunRequired &&
+      water >= this.waterRequired
+    );
+  }
+}
+
+//To add a plant to the game you just have to provide these fields
+//
+//Name
+//Maximum growth level
+//Water required to grow
+//Sun Required to grow
+//The value of the plant once harvested
+//An array of symbols to be used
+
+export const plantSpeciesArray: PlantInstance[] = [
+  new PlantInstance("apple", 10, 8, 2, 20, ["a", "A"]),
+  new PlantInstance("banana", 11, 6, 3, 30, ["b", "B"]),
+  new PlantInstance("carrot", 4, 2, 2, 5, ["c", "C"]),
+];
+```
 
 ## Reflection on F2
 
