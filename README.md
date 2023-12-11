@@ -292,12 +292,12 @@ Our game supports English, Korean, and Farsi. Using the internationalization sol
 The user selects a language using the dropdown on the right side of the game window. Upon selecting a language, all existing and new text prompts are replaced with that language's translations. We also save the user's preferred language using `localStorage` and load it on entry so that they aren't blindsided with English if they reset or come back later.
 
 ### Mobile Installation [F3.c]
-
-How did you get your game to be installable on a smartphone-class mobile device? If you followed a tutorial, guide, video, or blogpost, directly link to those resources that helped you learn. What changes were needed to make the game installable?
+The process to make our game into a playable offline PWA was fairly simple. Our game was made to run in the browser, and was made using TypeScript, CSS, and HTML, so to change it into something you could download and play on a phone was possible by just adding one line to the HTML file in the <head>, and then hooking up a JSON file in the root directory telling the PWA everything it needed to know about our game.
+The tutorial/guide that I followed was this one "https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Installable_PWAs"
 
 ### Mobile Play (Offline) [F3.d]
 
-What changes to your design were needed to make it play well on a mobile device? Were there any changes needed to make sure it worked in the offline case?
+There were no changes that we needed to make in order for the game to be playable offline, other than making it a PWA, however in order to make our game "satisfactorily playable" on mobile, we had to change up the control scheme. Before, everything was controlled by the keyboard and arrow keys, with a couple of functions being mapped to HTML buttons below the game space. In order for our game to be playable on mobile we had to implement touch features. Now, in addition to using the keyboard and arrow keys, the player can click or touch to move around and harvest, along with three buttons below the game space that allow the player to plant our three different plants.
 
 ## Reflection on F3
 
