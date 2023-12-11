@@ -214,3 +214,36 @@ Our game has remained relatively similar as before, but our plans have slightly 
 ## Reflection on F2
 
 Since we're a bit behind, we've been working on some of the F3 bits alongside the F2 requirements, so it's definitely affected our plans in a way we think is positive. Something that we focused a lot on in this segment was seperating out our code a bit more. We now have many different files which has made it easier to work with for the most part. Our roles and design choices have stayed relatively similar, so we're hoping to wrap up F2 strong and go into F3.
+
+## How we satisfied the software requirements for F3
+
+### F0+F1+F2 Requirements
+
+- [F0.a] You control a character moving on a 2D grid.
+  - Same as previous.
+- [F0.b] You advance time in the turn-based simulation manually.
+  - Same as previous.
+- [F0.c] You can reap (gather) or sow (plant) plants on the grid when your character is near them.
+  - Same as previous.
+- [F0.d] Grid cells have sun and water levels. The incoming sun and water for each cell is somehow randomly generated each turn. Sun energy cannot be stored in a cell (it is used immediately or lost) while water moisture can be slowly accumulated over several turns.
+  - Same as previous.
+- [F0.e] Each plant on the grid has a type (e.g. one of 3 species) and a growth level (e.g. “level 1”, “level 2”, “level 3”).
+  - Same as previous.
+- [F0.f] Simple spatial rules govern plant growth based on sun, water, and nearby plants (growth is unlocked by satisfying conditions).
+  - Same as previous.
+- [F0.g] A play scenario is completed when some condition is satisfied (e.g. at least X plants at growth level Y or above).
+  - Same as previous.
+- [F1.a] The important state of each cell of your game’s grid must be backed by a single contiguous byte array in AoS or SoA format. Your team must statically allocate memory usage for the whole grid.
+  - Same as previous.
+- [F1.b] The player must be able to undo every major choice (all the way back to the start of play), even from a saved game. They should be able to redo (undo of undo operations) multiple times.
+  - Same as previous.
+- [F1.c] The player must be able to manually save their progress in the game in a way that allows them to load that save and continue play another day. The player must be able to manage multiple save files (allowing save scumming).
+  - Same as previous, but save management code has been moved to it's own file.
+- [F1.d] The game must implement an implicit auto-save system to support recovery from unexpected quits. (For example, when the game is launched, if an auto-save entry is present, the game might ask the player "do you want to continue where you left off?" The auto-save entry might or might not be visible among the list of manual save entries available for the player to load as part of F1.c.)
+  - Same as previous, but save management code has been moved to it's own file.
+- [F2.a] External DSL for scenario designs: In separate text file, designers should be able to express the design of different gameplay scenarios, e.g. starting conditions, weather randomization policy, and victory conditions. The language must be able to schedule unique events that happen at specific times.
+  - Same as previous.
+- [F2.b] Internal DSL for plant types and growth conditions: Within the main programming language used for the rest of your game, you should implement and use a domain-specific language for defining your different types of plants and the unique growth rules that apply to each.
+  - Same as previous.
+
+### F3 Requirements
