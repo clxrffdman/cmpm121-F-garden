@@ -302,4 +302,4 @@ There were no changes that we needed to make in order for the game to be playabl
 
 ## Reflection on F3
 
-Looking back on how you achieved the new F3 requirements, how has your team’s plan changed? Did you reconsider any of the choices you previously described for Tools and Materials or your Roles? Has your game design evolved now that you've started to think about giving the player more feedback? It would be very suspicious if you didn’t need to change anything. There’s learning value in you documenting how your team’s thinking has changed over time.
+Our plan has been pretty loose throughout this project and over time our roles have also become a bit more loose as well. We're deep enough into the project now that tasks are now done more as a matter of preference/expertise on what we want to learn rather than our assigned role. We're offering a bit more feedback to the player through hover popups but our game's design has mostly stayed the same. Once again, we've refactored a bit of the code, but not as much as we did for F2.
