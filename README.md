@@ -210,7 +210,6 @@ Our game has remained relatively similar as before, but our plans have slightly 
       new PlantInstance("banana", 11, 6, 3, 30, ["b", "B"]),
       new PlantInstance("carrot", 4, 2, 2, 5, ["c", "C"]),
     ];
-```
 
 ## Reflection on F2
 
