@@ -3,6 +3,9 @@ import { updateButtonsVisual } from "./saveManagement";
 import { gameGrid, scenarioButtons } from "./main";
 
 const translationHtmls: string[] = [
+  "appleButton",
+  "bananaButton",
+  "carrotButton",
   "passTimeButton",
   "title",
   "sunLevelText",
@@ -18,6 +21,9 @@ const translationHtmls: string[] = [
 const resources = {
   en: {
     translation: {
+      appleButton: "Plant Apple",
+      bananaButton: "Plant Banana",
+      carrotButton: "Plant Carrot",
       passTimeButton: "Pass Time",
       title: "121 Group 7 Garden Game",
       sunLevelText: "Sun Level",
@@ -39,6 +45,9 @@ const resources = {
   },
   kr: {
     translation: {
+      appleButton: "식물 사과",
+      bananaButton: "식물 바나나",
+      carrotButton: "식물 당근",
       passTimeButton: "시간을 보내다",
       title: "121 그룹 7 정원 게임",
       sunLevelText: "태양 수준",
@@ -60,6 +69,9 @@ const resources = {
   },
   pr: {
     translation: {
+      appleButton: "سیب گیاهی",
+      bananaButton: "موز گیاهی",
+      carrotButton: "هویج گیاهی",
       passTimeButton: "گذشت زمان",
       title: "گروه 7 بازی باغ",
       sunLevelText: "سطح خورشید",

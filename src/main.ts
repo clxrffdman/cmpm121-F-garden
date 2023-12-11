@@ -54,6 +54,16 @@ addClickListener("#passTimeButton", () => {
   updateGame();
 });
 
+addClickListener("#appleButton", () => {
+  placePlant(0);
+});
+addClickListener("#bananaButton", () => {
+  placePlant(1);
+});
+addClickListener("#carrotButton", () => {
+  placePlant(2);
+});
+
 // Add event listener for keydown event for movement
 document.addEventListener("keydown", (event) => {
   const arrowKeys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
